@@ -10,20 +10,67 @@ import java.net.*;
  */
 public class TCPDataSource implements DataSource {
     private List<DataListener> subscribers = new ArrayList<>();
+    private String host;
+    private int port;
+    private Thread clientThread = null;
+    private SocketClient client = null;
 
     public TCPDataSource(String host, int port) {
-        new Thread(() -> {
+        this.host = host;
+        this.port = port;
+    }
+
+    public void subscribe(DataListener listener) {
+        this.subscribers.add(listener);
+    }
+
+    public void open() {
+        this.client = new SocketClient(this.host, this.port);
+        this.clientThread = new Thread(this.client);
+        this.clientThread.start();
+    }
+
+    public void close() {
+        if (this.client != null) {
+            this.client.terminate();
+            try {
+                this.clientThread.join();
+            } catch (InterruptedException ignored) {}
+        }
+    }
+
+    private class SocketClient implements Runnable {
+        private String host;
+        private int port;
+        private Socket clientSocket = null;
+
+        public SocketClient(String host, int port) {
+            this.host = host;
+            this.port = port;
+        }
+
+        public void terminate() {
+            if (this.clientSocket != null) {
+                try {
+                    this.clientSocket.close();
+                } catch (IOException e) {
+                    System.out.println("Got exception closing socket: " + e.getMessage());
+                }
+            }
+        }
+
+        @Override
+        public void run() {
             System.out.println("Starting socket client");
-            Socket clientSocket;
             BufferedReader socketReader;
             try {
-                clientSocket = new Socket(host, port);
+                this.clientSocket = new Socket(this.host, this.port);
             } catch (IOException e) {
-                System.out.println("Could not connect to " + host + " on port " + port + ": " + e.getMessage());
+                System.out.println("Could not connect to " + this.host + " on port " + this.port + ": " + e.getMessage());
                 return;
             }
             try {
-                socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                socketReader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
             } catch (IOException e) {
                 System.out.println("Could not create socket reader: " + e.getMessage());
                 return;
@@ -47,10 +94,6 @@ public class TCPDataSource implements DataSource {
                     System.out.println(e.getMessage());
                 }
             }
-        }).start();
-    }
-
-    public void subscribe(DataListener listener) {
-        this.subscribers.add(listener);
+        }
     }
 }

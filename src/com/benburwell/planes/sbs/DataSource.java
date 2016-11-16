@@ -5,4 +5,6 @@ package com.benburwell.planes.sbs;
  */
 public interface DataSource {
     void subscribe(DataListener listener);
+    void open();
+    void close();
 }

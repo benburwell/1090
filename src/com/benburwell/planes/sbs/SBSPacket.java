@@ -4,35 +4,31 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.DoubleSummaryStatistics;
 
 /**
  * Created by ben on 11/15/16.
  */
 public class SBSPacket {
     private MessageType messageType;
-    private TransmissionType transmissionType;
-    private String sessionId;
-    private String aircraftId;
-    private String hexIdent;
-    private String flightId;
-    private Date dateGenerated;
-    private Date dateLogged;
-    private String callsign;
-    private double altitude;
-    private double groundSpeed;
-    private double track;
-    private double latitude;
-    private double longitude;
-    private double verticalRate;
-    private String squawk;
-    private boolean alert;
-    private boolean emergency;
-    private boolean spi;
-    private boolean isOnGround;
-
-    public SBSPacket() {
-    }
+    private TransmissionType transmissionType = null;
+    private String sessionId = null;
+    private String aircraftId = null;
+    private String hexIdent = null;
+    private String flightId = null;
+    private Date dateGenerated = null;
+    private Date dateLogged = null;
+    private String callsign = null;
+    private Double altitude = null;
+    private Double groundSpeed = null;
+    private Double track = null;
+    private Double latitude = null;
+    private Double longitude = null;
+    private Double verticalRate = null;
+    private String squawk = null;
+    private Boolean alert = null;
+    private Boolean emergency = null;
+    private Boolean spi = null;
+    private Boolean isOnGround = null;
 
     public SBSPacket(String packet) throws MalformedPacketException {
         this.parse(packet);
@@ -136,5 +132,85 @@ public class SBSPacket {
 
     public String toString() {
         return this.messageType.name();
+    }
+
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public TransmissionType getTransmissionType() {
+        return transmissionType;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public String getAircraftId() {
+        return aircraftId;
+    }
+
+    public String getHexIdent() {
+        return hexIdent;
+    }
+
+    public String getFlightId() {
+        return flightId;
+    }
+
+    public Date getDateGenerated() {
+        return dateGenerated;
+    }
+
+    public Date getDateLogged() {
+        return dateLogged;
+    }
+
+    public String getCallsign() {
+        return callsign;
+    }
+
+    public Double getAltitude() {
+        return altitude;
+    }
+
+    public Double getGroundSpeed() {
+        return groundSpeed;
+    }
+
+    public Double getTrack() {
+        return track;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Double getVerticalRate() {
+        return verticalRate;
+    }
+
+    public String getSquawk() {
+        return squawk;
+    }
+
+    public Boolean isAlert() {
+        return alert;
+    }
+
+    public Boolean isEmergency() {
+        return emergency;
+    }
+
+    public Boolean isSpi() {
+        return spi;
+    }
+
+    public Boolean isOnGround() {
+        return isOnGround;
     }
 }
