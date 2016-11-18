@@ -25,7 +25,7 @@ public class Main1090 extends JFrame {
         this.createMenuBar();
 
         this.setTitle("1090");
-        this.setSize(100, 100);
+        this.setSize(600, 400);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,7 +48,9 @@ public class Main1090 extends JFrame {
 
         provider.getDataConnectItem().addActionListener((ActionEvent event) -> {
             if (this.currentTcpConnection == 0) {
-                this.currentTcpConnection = this.addTcpSource("10.0.0.111", 30003);
+                TCPConnectionOptionDialog dialog = new TCPConnectionOptionDialog();
+                JOptionPane.showMessageDialog(this, dialog.getComponent(), "New Network Data Source", JOptionPane.PLAIN_MESSAGE);
+                this.currentTcpConnection = this.addTcpSource(dialog.getHost(), dialog.getPort());
                 provider.getDataConnectItem().setEnabled(false);
                 provider.getDataDisconnectItem().setEnabled(true);
             }
