@@ -1,6 +1,8 @@
 package com.benburwell.planes.gui;
 
 import com.benburwell.planes.data.Aircraft;
+import com.benburwell.planes.data.AircraftStore;
+import com.benburwell.planes.data.AircraftStoreListener;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Map;
@@ -15,8 +17,20 @@ public class AircraftTableModel extends AbstractTableModel {
     private Map<String,Aircraft> aircraftMap;
     private String[] columnNames = { "Hex", "Callsign", "Squawk", "Latitude", "Longitude", "Altitude", "Packets" };
 
-    public AircraftTableModel(Map<String,Aircraft> aircraftMap) {
-        this.aircraftMap = aircraftMap;
+    public AircraftTableModel(AircraftStore store) {
+        this.aircraftMap = store.getAircraft();
+        store.subscribe(new AircraftStoreListener() {
+            @Override
+            public void aircraftStoreChanged() {
+                AircraftTableModel.super.fireTableDataChanged();
+            }
+
+            @Override
+            public boolean respondTo(String aircraftId) {
+                // listen for all changes
+                return true;
+            }
+        });
     }
 
     @Override

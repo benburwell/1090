@@ -10,14 +10,12 @@ import com.benburwell.planes.data.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Map;
-import java.util.HashMap;
 
 public class Main1090 extends JFrame {
     private AggregateDataSource sbsDataSource = new AggregateDataSource();
-    private Map<String,Aircraft> aircraftMap = new HashMap<>();
+    private AircraftStore aircraft = new AircraftStore();
     private int currentTcpConnection = 0;
-    private AircraftTableModel aircraftTableModel = new AircraftTableModel(this.aircraftMap);
+    private JTabbedPane tabbedPane = new JTabbedPane();
 
     public Main1090() {
         this.initUI();
@@ -26,69 +24,48 @@ public class Main1090 extends JFrame {
     private void initUI() {
         this.createMenuBar();
 
-        this.createTable();
-
         this.setTitle("1090");
         this.setSize(100, 100);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.openDataSource();
+
+        this.createTabs();
     }
 
-    private void createTable() {
-        JTable table = new JTable(this.aircraftTableModel);
-        table.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(table);
-        this.add(scrollPane);
+    private void createTabs() {
+        AircraftTableComponent aircraftData = new AircraftTableComponent(this.aircraft);
+        this.tabbedPane.addTab("Aircraft Data", aircraftData.getComponent());
+
+        this.add(this.tabbedPane);
+        this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
 
     private void createMenuBar() {
-        JMenuBar menubar = new JMenuBar();
-        JMenu file = new JMenu("1090");
-        JMenuItem eMenuItem = new JMenuItem("Quit");
-        JMenu data = new JMenu("Data");
-        JMenuItem dataConnectItem = new JMenuItem("Connect...");
-        JMenuItem dataDisconnectItem = new JMenuItem("Disconnect");
+        MenuBarProvider provider = new MenuBarProvider();
+        this.setJMenuBar(provider.getMenuBar());
 
-        eMenuItem.addActionListener((ActionEvent event) -> {
-            System.exit(0);
-        });
-        file.add(eMenuItem);
-        menubar.add(file);
-
-        dataConnectItem.addActionListener((ActionEvent event) -> {
+        provider.getDataConnectItem().addActionListener((ActionEvent event) -> {
             if (this.currentTcpConnection == 0) {
                 this.currentTcpConnection = this.addTcpSource("10.0.0.111", 30003);
-                dataConnectItem.setEnabled(false);
-                dataDisconnectItem.setEnabled(true);
+                provider.getDataConnectItem().setEnabled(false);
+                provider.getDataDisconnectItem().setEnabled(true);
             }
         });
-        dataDisconnectItem.addActionListener((ActionEvent event) -> {
+        provider.getDataDisconnectItem().addActionListener((ActionEvent event) -> {
             if (this.currentTcpConnection != 0) {
                 this.sbsDataSource.closeSource(this.currentTcpConnection);
-                dataConnectItem.setEnabled(true);
-                dataDisconnectItem.setEnabled(false);
+                provider.getDataConnectItem().setEnabled(true);
+                provider.getDataDisconnectItem().setEnabled(false);
                 this.currentTcpConnection = 0;
             }
         });
-        dataDisconnectItem.setEnabled(false);
-        data.add(dataConnectItem);
-        data.add(dataDisconnectItem);
-        menubar.add(data);
-
-        this.setJMenuBar(menubar);
     }
 
     private void openDataSource() {
         this.sbsDataSource.subscribe((SBSPacket packet) -> {
-            if (packet.getHexIdent() != null) {
-                if (!this.aircraftMap.containsKey(packet.getHexIdent())) {
-                    this.aircraftMap.put(packet.getHexIdent(), new Aircraft(packet.getHexIdent()));
-                }
-                this.aircraftMap.get(packet.getHexIdent()).handleUpdate(packet);
-                this.aircraftTableModel.fireTableDataChanged();
-            }
+            this.aircraft.addPacket(packet);
         });
         this.sbsDataSource.open();
     }
