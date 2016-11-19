@@ -85,10 +85,7 @@ public class AircraftMapComponent implements ViewComponent {
             @Override
             public void aircraftStoreChanged() {
                 List<Drawable> planes = new ArrayList<>();
-                store.getAircraft().values().forEach(aircraft -> {
-                    String name = !aircraft.getCallsign().isEmpty() ? aircraft.getCallsign() : aircraft.getHexIdent();
-                    planes.add(new Plane(name, aircraft.getCurrentPosition(), aircraft.getTrack()));
-                });
+                store.getAircraft().values().forEach(aircraft -> planes.add(new Plane(aircraft)));
                 mapPanel.setPlanes(planes);
                 mapPanel.validate();
                 mapPanel.repaint();

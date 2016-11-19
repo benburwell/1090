@@ -17,6 +17,7 @@ public class Aircraft implements Comparable<Aircraft> {
     private long packetCount = 0;
     private double track;
     private double groundSpeed;
+    private double verticalRate;
 
     public Aircraft(String hexIdent) {
         this.hexIdent = hexIdent;
@@ -44,6 +45,9 @@ public class Aircraft implements Comparable<Aircraft> {
         }
         if (packet.getGroundSpeed() != null) {
             this.groundSpeed = packet.getGroundSpeed();
+        }
+        if (packet.getVerticalRate() != null) {
+            this.verticalRate = packet.getVerticalRate();
         }
     }
 
@@ -73,6 +77,10 @@ public class Aircraft implements Comparable<Aircraft> {
 
     public double getGroundSpeed() {
         return this.groundSpeed;
+    }
+
+    public double getVerticalRate() {
+        return this.verticalRate;
     }
 
     @Override

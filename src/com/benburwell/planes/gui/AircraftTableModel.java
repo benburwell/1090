@@ -15,7 +15,7 @@ import java.util.Collections;
  */
 public class AircraftTableModel extends AbstractTableModel {
     private Map<String,Aircraft> aircraftMap;
-    private String[] columnNames = { "Hex", "Callsign", "Squawk", "Latitude", "Longitude", "Altitude", "Track", "Ground Speed", "Packets" };
+    private String[] columnNames = { "Hex", "Callsign", "Squawk", "Latitude", "Longitude", "Altitude", "Vertical Rate", "Track", "Ground Speed", "Packets" };
 
     public AircraftTableModel(AircraftStore store) {
         this.aircraftMap = store.getAircraft();
@@ -66,10 +66,12 @@ public class AircraftTableModel extends AbstractTableModel {
             case 5:
                 return aircraft.getCurrentPosition().getAltitude();
             case 6:
-                return aircraft.getTrack();
+                return aircraft.getVerticalRate();
             case 7:
-                return aircraft.getGroundSpeed();
+                return aircraft.getTrack();
             case 8:
+                return aircraft.getGroundSpeed();
+            case 9:
                 return aircraft.getPacketCount();
         }
         return "";

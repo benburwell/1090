@@ -1,5 +1,6 @@
 package com.benburwell.planes.gui.aircraftmap;
 
+import com.benburwell.planes.data.Aircraft;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
 
@@ -10,7 +11,7 @@ import java.awt.geom.AffineTransform;
  * Created by ben on 11/19/16.
  */
 public class Plane extends GeoPoint implements Drawable {
-    public final int TRIANGLE_HEIGHT = 8;
+    public final int TRIANGLE_HEIGHT = 6;
     public final int TRIANGLE_WIDTH = 4;
     public final int TEXT_OFFSET_X = 10;
     public final int TEXT_OFFSET_Y = 15;
@@ -18,15 +19,23 @@ public class Plane extends GeoPoint implements Drawable {
     public final int MAX_COLOR_HEIGHT = 50000;
     private String name;
     private double heading;
+    private double speed;
+    private double verticalRate;
 
-    public Plane(String name, Position position, double heading) {
-        this(name, position.getLatitude(), position.getLongitude(), position.getAltitude(), heading);
+    public Plane(Aircraft ac) {
+        this(ac.getCallsign(), ac.getCurrentPosition(), ac.getTrack(), ac.getGroundSpeed(), ac.getVerticalRate());
     }
 
-    public Plane(String name, double latitude, double longitude, double altitude, double heading) {
+    public Plane(String name, Position position, double heading, double speed, double verticalRate) {
+        this(name, position.getLatitude(), position.getLongitude(), position.getAltitude(), heading, speed, verticalRate);
+    }
+
+    public Plane(String name, double latitude, double longitude, double altitude, double heading, double speed, double verticalRate) {
         super(latitude, longitude, altitude);
         this.name = name;
         this.heading = heading;
+        this.speed = speed;
+        this.verticalRate = verticalRate;
     }
 
     public int getFlightLevel() {
@@ -60,14 +69,38 @@ public class Plane extends GeoPoint implements Drawable {
         return Math.toRadians(this.heading);
     }
 
-    public void drawTriangle(Graphics2D ctx, int x, int y) {
+    public double getSpeed() {
+        return this.speed;
+    }
+
+    public void drawTriangle(Graphics2D ctx, int x, int y, int predictionLength) {
         AffineTransform at = new AffineTransform();
-        //at.setToRotation(this.getAngle(), x, y);
         at.setToRotation(this.getAngle(), x, y);
         ctx.setTransform(at);
         int[] xs = new int[]{ x - TRIANGLE_WIDTH, x, x + TRIANGLE_WIDTH, x - TRIANGLE_WIDTH };
         int[] ys = new int[]{ y + TRIANGLE_HEIGHT, y - TRIANGLE_HEIGHT, y + TRIANGLE_HEIGHT, y + TRIANGLE_HEIGHT };
-        ctx.drawPolyline(xs, ys, 4);
+        ctx.fillPolygon(xs, ys, 4);
+        ctx.drawLine(x, y, x, y - predictionLength);
+    }
+
+    public String getVerticalRateIndicator() {
+        if (this.verticalRate > 0) {
+            return "\u2191"; // ↑
+        } else if (this.verticalRate < 0) {
+            return "\u2193"; // ↓
+        }
+        return "";
+    }
+
+    public String getDisplayName() {
+        if (this.name == null || this.name.isEmpty()) {
+            return "-----";
+        }
+        return this.name;
+    }
+
+    public int getPredictionLength(double pixelsPerNauticalMile) {
+        return (int) (this.speed / 60.0 * pixelsPerNauticalMile);
     }
 
     public void drawOn(Graphics g, AircraftMap map) {
@@ -78,14 +111,16 @@ public class Plane extends GeoPoint implements Drawable {
             // draw the plane dot
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setColor(this.getPlaneColor());
-            this.drawTriangle(g2d, x, y);
+            int predictedTrack = this.getPredictionLength(map.getPixelsPerNauticalMile());
+            this.drawTriangle(g2d, x, y, predictedTrack);
             g2d.dispose();
 
 
             // draw the name of the plane
             g.setColor(GraphicsTheme.Colors.BASE_5);
-            g.drawString(this.name, x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y);
-            g.drawString("" + this.getFlightLevel(), x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y + g.getFontMetrics().getHeight());
+            g.drawString(this.getDisplayName(), x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y);
+            String infoString = String.format("%d%s %.1f", this.getFlightLevel(), this.getVerticalRateIndicator(), this.getSpeed());
+            g.drawString(infoString,  x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y + g.getFontMetrics().getHeight());
         }
     }
 }
