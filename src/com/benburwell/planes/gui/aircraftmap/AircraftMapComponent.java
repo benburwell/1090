@@ -35,20 +35,20 @@ public class AircraftMapComponent implements ViewComponent {
     }
 
     public void focusNextAircraft() {
-        List<String> aircraftIdentifiers = new ArrayList<>(this.store.getAircraft().keySet());
-        Collections.sort(aircraftIdentifiers);
-        if (this.focusedAircraftIdentifier == null && aircraftIdentifiers.size() > 0) {
-            this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
-        } else {
-            int idx = aircraftIdentifiers.indexOf(this.focusedAircraftIdentifier);
-            if (idx > 0 && idx < aircraftIdentifiers.size() - 1) {
-                this.focusedAircraftIdentifier = aircraftIdentifiers.get(idx++);
-            } else if (aircraftIdentifiers.size() > 0) {
-                this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
-            } else {
-                this.focusedAircraftIdentifier = null;
-            }
-        }
+    //    List<String> aircraftIdentifiers = new ArrayList<>(this.store.getAircraft().keySet());
+    //    Collections.sort(aircraftIdentifiers);
+    //    if (this.focusedAircraftIdentifier == null && aircraftIdentifiers.size() > 0) {
+    //        this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
+    //    } else {
+    //        int idx = aircraftIdentifiers.indexOf(this.focusedAircraftIdentifier);
+    //        if (idx > 0 && idx < aircraftIdentifiers.size() - 1) {
+    //            this.focusedAircraftIdentifier = aircraftIdentifiers.get(idx++);
+    //        } else if (aircraftIdentifiers.size() > 0) {
+    //            this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
+    //        } else {
+    //            this.focusedAircraftIdentifier = null;
+    //        }
+    //    }
     }
 
     private void setupMap() {
@@ -61,6 +61,7 @@ public class AircraftMapComponent implements ViewComponent {
             if (e.getKeyCode() == KeyEvent.VK_EQUALS && e.isShiftDown() && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.zoomIn();
             } else if (e.getKeyCode() == KeyEvent.VK_MINUS && e.getID() == KeyEvent.KEY_PRESSED) {
+                System.out.println("Zooming out");
                 this.mapPanel.zoomOut();
             } else if (e.getKeyCode() == KeyEvent.VK_L && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.moveEast();

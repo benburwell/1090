@@ -21,11 +21,12 @@ public class AircraftMap extends JPanel {
     // drawing constants
     public final float FONT_SIZE = 12;
     public final int TEXT_PADDING = 5;
+    public final int NUMBER_OF_RANGE_RINGS = 5;
 
     // map manipulation constants
-    public final int ZOOM_INTERVAL_MILES = 10;
+    public final int MIN_ZOOM_PIXELS_PER_MILE = 1;
+    public final int MAX_ZOOM_PIXELS_PER_MILE = 2000;
     public final double PAN_INTERVAL_MILES = 1.0;
-    public final int RING_SPACING = 10;
 
     // instance fields
     private List<Drawable> planes = new ArrayList<>();
@@ -56,10 +57,6 @@ public class AircraftMap extends JPanel {
         this.drawRange(g);
     }
 
-    /**
-     *
-     * @param g
-     */
     public void drawPositionAndScale(Graphics g) {
         Font currentFont = g.getFont();
         Font newFont = currentFont.deriveFont(FONT_SIZE);
@@ -67,22 +64,33 @@ public class AircraftMap extends JPanel {
         g.setColor(GraphicsTheme.Colors.BLUE);
         g.drawString(String.format("%08.5f N", this.centerLatitude), TEXT_PADDING, (int) FONT_SIZE + TEXT_PADDING);
         g.drawString(String.format("%08.5f E", this.centerLongitude), TEXT_PADDING, (int) FONT_SIZE * 2 + TEXT_PADDING);
-        g.drawString("1 nm", TEXT_PADDING, (int) FONT_SIZE * 3 + TEXT_PADDING);
-        g.drawLine(TEXT_PADDING, (int) FONT_SIZE * 3 + TEXT_PADDING, (int) (TEXT_PADDING + this.getPixelsPerNauticalMile()), (int) FONT_SIZE * 3 + TEXT_PADDING);
+        g.drawString(String.format("%d nm", this.getRangeRadius()), TEXT_PADDING, (int) FONT_SIZE * 3 + TEXT_PADDING);
+    }
+
+    public int getRangeRadius() {
+        double milesHigh = this.getHeight() / this.getPixelsPerNauticalMile();
+        double milesWide = this.getWidth() / this.getPixelsPerNauticalMile();
+        double screenMiles = Math.min(milesHigh, milesWide);
+        int milesPerRing = (int) screenMiles / NUMBER_OF_RANGE_RINGS;
+        return milesPerRing;
+    }
+
+    public List<Integer> getRangeRadii() {
+        int rangeRadius = this.getRangeRadius();
+        List<Integer> radii = new ArrayList<>();
+        for (int ringNumber = 1; ringNumber <= NUMBER_OF_RANGE_RINGS; ringNumber++) {
+            radii.add(rangeRadius * ringNumber);
+        }
+        return radii;
     }
 
     public void drawRange(Graphics g) {
         int centerX = this.getWidth() / 2;
         int centerY = this.getHeight() / 2;
         g.setColor(GraphicsTheme.Colors.BASE_3);
-        int diameter = (int) this.getPixelsPerNauticalMile() * RING_SPACING * 2;
-        int ringNumber = 1;
-        while (diameter < this.getWidth() || diameter < this.getHeight()) {
-            g.drawOval(centerX - (diameter / 2), centerY - (diameter / 2), diameter, diameter);
-            g.drawString(String.format("%d", ringNumber * RING_SPACING), centerX + (diameter / 2) + TEXT_PADDING, (int) (centerY + FONT_SIZE + TEXT_PADDING));
-            g.drawString(String.format("%d", ringNumber * RING_SPACING), centerX + TEXT_PADDING, centerY - (int) ((diameter / 2) + FONT_SIZE));
-            diameter += this.getPixelsPerNauticalMile() * RING_SPACING * 2;
-            ringNumber++;
+        for (Integer radius : this.getRangeRadii()) {
+            int pixelRadius = (int) (this.getPixelsPerNauticalMile() * radius);
+            g.drawOval(centerX - pixelRadius, centerY - pixelRadius, pixelRadius * 2, pixelRadius * 2);
         }
         g.drawLine(centerX, 0, centerX, this.getHeight());
         g.drawLine(0, centerY, this.getWidth(), centerY);
@@ -116,7 +124,6 @@ public class AircraftMap extends JPanel {
 
     public double getNauticalMilesPerDegreeLongitude() {
         double milesPerDegree = Math.abs(Math.cos(Math.toRadians(this.centerLatitude)) * NAUTICAL_MILES_PER_DEGREE_LATITUDE);
-        System.out.println("Miles per degree at " + this.centerLatitude + " N: " + milesPerDegree);
         return milesPerDegree;
     }
 
@@ -125,14 +132,14 @@ public class AircraftMap extends JPanel {
     }
 
     public void zoomIn() {
-        this.pixelsPerNauticalMile += ZOOM_INTERVAL_MILES;
+        this.pixelsPerNauticalMile = Math.min(MAX_ZOOM_PIXELS_PER_MILE, this.pixelsPerNauticalMile * 2);
         this.invalidate();
         this.validate();
         this.repaint();
     }
 
     public void zoomOut() {
-        this.pixelsPerNauticalMile -= ZOOM_INTERVAL_MILES;
+        this.pixelsPerNauticalMile = Math.max(MIN_ZOOM_PIXELS_PER_MILE, this.pixelsPerNauticalMile / 2);
         this.invalidate();
         this.validate();
         this.repaint();

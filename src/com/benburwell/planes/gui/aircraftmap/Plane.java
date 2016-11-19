@@ -65,8 +65,6 @@ public class Plane extends GeoPoint implements Drawable {
             g.setColor(GraphicsTheme.Colors.BLUE);
             g.drawString(this.name, x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y);
             g.drawString("" + this.getFlightLevel(), x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y + g.getFontMetrics().getHeight());
-        } else {
-            System.out.println("Skipping drawing plane at " + x + "," + y + " which is not within bounds");
         }
     }
 }
