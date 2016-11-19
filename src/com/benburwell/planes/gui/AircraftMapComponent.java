@@ -108,19 +108,22 @@ public class AircraftMapComponent implements ViewComponent {
     }
 
     private class AircraftMap extends JPanel {
-        private final float FONT_SIZE = 12;
-        private final int TEXT_PADDING = 5;
-        private final int ZOOM_INTERVAL = 100;
-        private final double PAN_INTERVAL = 1.0 / 60.0;
+        // geographic constants
         private final double MAX_LATITUDE = 90.0;
         private final double MIN_LATITUDE = -90.0;
         private final double MAX_LONGITUDE = 180.0;
         private final double MIN_LONGITUDE = -180.0;
+        private final double NAUTICAL_MILES_PER_DEGREE_LATITUDE = 60.0;
+
+        private final float FONT_SIZE = 12;
+        private final int TEXT_PADDING = 5;
+        private final int ZOOM_INTERVAL = 10;
+        private final double PAN_INTERVAL = 1.0 / 60.0;
         private final int RING_SPACING = 10;
         private List<Drawable> planes = new ArrayList<>();
         private double centerLatitude;
         private double centerLongitude;
-        private int pixelsPerDegree = 600;
+        private int pixelsPerNauticalMile = 10;
 
         public AircraftMap() {
             super();
@@ -181,23 +184,28 @@ public class AircraftMapComponent implements ViewComponent {
             return this.centerLongitude;
         }
 
-        public double getPixelsPerDegree() {
-            return this.pixelsPerDegree;
+        public double getPixelsPerDegreeLatitude() {
+            return this.pixelsPerNauticalMile * NAUTICAL_MILES_PER_DEGREE_LATITUDE;
+        }
+
+        public double getPixelsPerDegreeLongitude() {
+            double milesPerDegree = Math.abs(Math.cos(this.centerLatitude) * NAUTICAL_MILES_PER_DEGREE_LATITUDE);
+            return this.pixelsPerNauticalMile * milesPerDegree;
         }
 
         public double getPixelsPerNauticalMile() {
-            return this.pixelsPerDegree / 60.0;
+            return this.pixelsPerNauticalMile;
         }
 
         public void zoomIn() {
-            this.pixelsPerDegree += ZOOM_INTERVAL;
+            this.pixelsPerNauticalMile += ZOOM_INTERVAL;
             this.invalidate();
             this.validate();
             this.repaint();
         }
 
         public void zoomOut() {
-            this.pixelsPerDegree -= ZOOM_INTERVAL;
+            this.pixelsPerNauticalMile -= ZOOM_INTERVAL;
             this.invalidate();
             this.validate();
             this.repaint();
@@ -247,7 +255,7 @@ public class AircraftMapComponent implements ViewComponent {
 
         public int getX(AircraftMap map) {
             double degreesFromCenter = map.getCenterLongitude() - this.longitude;
-            double pixelsFromCenter = degreesFromCenter * map.getPixelsPerDegree();
+            double pixelsFromCenter = degreesFromCenter * map.getPixelsPerDegreeLongitude();
             double centerPixels = map.getSize().getWidth() / 2;
             int xPosition = (int)(centerPixels - pixelsFromCenter);
             return xPosition;
@@ -255,7 +263,7 @@ public class AircraftMapComponent implements ViewComponent {
 
         public int getY(AircraftMap map) {
             double degreesFromCenter = map.getCenterLatitude() - this.latitude;
-            double pixelsFromCenter = degreesFromCenter * map.getPixelsPerDegree();
+            double pixelsFromCenter = degreesFromCenter * map.getPixelsPerDegreeLatitude();
             double centerPixels = map.getSize().getHeight() / 2;
             int yPosition = (int)(centerPixels + pixelsFromCenter);
             return yPosition;
