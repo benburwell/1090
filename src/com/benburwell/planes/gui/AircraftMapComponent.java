@@ -84,6 +84,7 @@ public class AircraftMapComponent implements ViewComponent {
         private final double MIN_LATITUDE = -90.0;
         private final double MAX_LONGITUDE = 180.0;
         private final double MIN_LONGITUDE = -180.0;
+        private final int RING_SPACING = 10;
         private List<Drawable> planes = new ArrayList<>();
         private double centerLatitude;
         private double centerLongitude;
@@ -101,6 +102,7 @@ public class AircraftMapComponent implements ViewComponent {
             super.paintComponent(g);
             this.planes.forEach(item -> item.drawOn(g, this));
             this.drawPositionAndScale(g);
+            this.drawRange(g);
         }
 
         public void drawPositionAndScale(Graphics g) {
@@ -110,6 +112,23 @@ public class AircraftMapComponent implements ViewComponent {
             g.setColor(GraphicsTheme.Colors.BLUE);
             g.drawString(String.format("%08.5f N", this.centerLatitude), TEXT_PADDING, (int)FONT_SIZE + TEXT_PADDING);
             g.drawString(String.format("%08.5f E", this.centerLongitude), TEXT_PADDING, (int)FONT_SIZE * 2 + TEXT_PADDING);
+        }
+
+        public void drawRange(Graphics g) {
+            int centerX = this.getWidth() / 2;
+            int centerY = this.getHeight() / 2;
+            g.setColor(GraphicsTheme.Colors.BASE_3);
+            int diameter = (int) this.getPixelsPerNauticalMile() * RING_SPACING;
+            int ringNumber = 1;
+            while (diameter < this.getWidth() || diameter < this.getHeight()) {
+                g.drawOval(centerX - (diameter / 2), centerY - (diameter / 2), diameter, diameter);
+                g.drawString(String.format("%d", ringNumber * RING_SPACING), centerX + (diameter / 2) + TEXT_PADDING, (int) (centerY + FONT_SIZE + TEXT_PADDING));
+                g.drawString(String.format("%d", ringNumber * RING_SPACING), centerX + TEXT_PADDING, centerY - (int) ((diameter / 2) + FONT_SIZE));
+                diameter += this.getPixelsPerNauticalMile() * 10;
+                ringNumber++;
+            }
+            g.drawLine(centerX, 0, centerX, this.getHeight());
+            g.drawLine(0, centerY, this.getWidth(), centerY);
         }
 
         public void setPlanes(List<Drawable> planes) {
@@ -132,6 +151,10 @@ public class AircraftMapComponent implements ViewComponent {
 
         public double getPixelsPerDegree() {
             return this.pixelsPerDegree;
+        }
+
+        public double getPixelsPerNauticalMile() {
+            return this.pixelsPerDegree / 60.0;
         }
 
         public void zoomIn() {
