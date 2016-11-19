@@ -2,3 +2,5 @@ out/
 planes.jar
 .idea/
 1090.iml
+build/
+.gradle/
