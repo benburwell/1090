@@ -38,6 +38,9 @@ public class Main1090 extends JFrame {
         AircraftTableComponent aircraftData = new AircraftTableComponent(this.aircraft);
         this.tabbedPane.addTab("Aircraft Data", aircraftData.getComponent());
 
+        AircraftMapComponent aircraftMap = new AircraftMapComponent(this.aircraft);
+        this.tabbedPane.addTab("Live Map", aircraftMap.getComponent());
+
         this.add(this.tabbedPane);
         this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
