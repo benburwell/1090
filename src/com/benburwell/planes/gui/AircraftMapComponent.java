@@ -2,12 +2,14 @@ package com.benburwell.planes.gui;
 
 import com.benburwell.planes.data.AircraftStore;
 import com.benburwell.planes.data.AircraftStoreListener;
+import com.benburwell.planes.data.Position;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by ben on 11/18/16.
@@ -15,12 +17,30 @@ import java.util.ArrayList;
 public class AircraftMapComponent implements ViewComponent {
     private AircraftStore store;
     private AircraftMap mapPanel;
+    private String focusedAircraftIdentifier = null;
 
     public AircraftMapComponent(AircraftStore store) {
         this.store = store;
         this.setupMap();
         this.bindKeys();
         this.subscribeToChanges();
+    }
+
+    public void focusNextAircraft() {
+        List<String> aircraftIdentifiers = new ArrayList<>(this.store.getAircraft().keySet());
+        Collections.sort(aircraftIdentifiers);
+        if (this.focusedAircraftIdentifier == null && aircraftIdentifiers.size() > 0) {
+            this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
+        } else {
+            int idx = aircraftIdentifiers.indexOf(this.focusedAircraftIdentifier);
+            if (idx > 0 && idx < aircraftIdentifiers.size() - 1) {
+                this.focusedAircraftIdentifier = aircraftIdentifiers.get(idx++);
+            } else if (aircraftIdentifiers.size() > 0) {
+                this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
+            } else {
+                this.focusedAircraftIdentifier = null;
+            }
+        }
     }
 
     private void setupMap() {
@@ -42,9 +62,21 @@ public class AircraftMapComponent implements ViewComponent {
                 this.mapPanel.moveSouth();
             } else if (e.getKeyCode() == KeyEvent.VK_K && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.moveNorth();
+            } else if (e.getKeyCode() == KeyEvent.VK_0 && e.getID() == KeyEvent.KEY_PRESSED) {
+                this.mapPanel.setCenter(40.6188942, -75.4947205);
+            } else if (e.getKeyCode() == KeyEvent.VK_TAB && e.getID() == KeyEvent.KEY_PRESSED) {
+                this.focusNextAircraft();
+                this.centerMapOnPlane(this.focusedAircraftIdentifier);
             }
             return false;
         });
+    }
+
+    private void centerMapOnPlane(String identifier) {
+        if (identifier != null) {
+            Position pos = this.store.getAircraft().get(identifier).getCurrentPosition();
+            this.mapPanel.setCenter(pos.getLatitude(), pos.getLongitude());
+        }
     }
 
     private void subscribeToChanges() {
