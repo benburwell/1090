@@ -6,10 +6,12 @@ package com.benburwell.planes.gui.aircraftmap;
 public class GeoPoint {
     private double latitude;
     private double longitude;
+    private double altitude;
 
-    public GeoPoint(double latitude, double longitude) {
+    public GeoPoint(double latitude, double longitude, double altitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.altitude = altitude;
     }
 
     public int getX(AircraftMap map) {
@@ -26,5 +28,9 @@ public class GeoPoint {
         double centerPixels = map.getSize().getHeight() / 2;
         int yPosition = (int) (centerPixels + pixelsFromCenter);
         return yPosition;
+    }
+
+    public double getAltitude() {
+        return this.altitude;
     }
 }

@@ -27,10 +27,10 @@ public class AircraftMapComponent implements ViewComponent {
         this.subscribeToChanges();
 
         List<Drawable> planes = new ArrayList<>();
-        planes.add(new Plane("JBU1111", 40.6188942, -75.4947205));
-        planes.add(new Plane("JBU1112", 40.6178942, -75.4347205));
-        planes.add(new Plane("JBU1114", 40.5178942, -75.5347205));
-        planes.add(new Plane("JBU1115", 40.3178942, -75.1347205));
+        planes.add(new Plane("JBU1111", 40.6188942, -75.4947205, 36000));
+        planes.add(new Plane("JBU1112", 40.6178942, -75.4347205, 42000));
+        planes.add(new Plane("JBU1114", 40.5178942, -75.5347205, 3500));
+        planes.add(new Plane("JBU1115", 40.3178942, -75.1347205, 0));
         this.mapPanel.setPlanes(planes);
     }
 
@@ -94,9 +94,7 @@ public class AircraftMapComponent implements ViewComponent {
                 List<Drawable> planes = new ArrayList<>();
                 store.getAircraft().values().forEach(aircraft -> {
                     String name = !aircraft.getCallsign().isEmpty() ? aircraft.getCallsign() : aircraft.getHexIdent();
-                    double lat = aircraft.getCurrentPosition().getLatitude();
-                    double lon = aircraft.getCurrentPosition().getLongitude();
-                    planes.add(new Plane(name, lat, lon));
+                    planes.add(new Plane(name, aircraft.getCurrentPosition()));
                 });
                 mapPanel.setPlanes(planes);
                 mapPanel.validate();

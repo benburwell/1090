@@ -6,6 +6,7 @@ package com.benburwell.planes.gui;
 
 import com.benburwell.planes.sbs.*;
 import com.benburwell.planes.data.*;
+import com.benburwell.planes.gui.aircraftmap.*;
 
 import java.awt.*;
 import javax.swing.*;
@@ -43,6 +44,8 @@ public class Main1090 extends JFrame {
 
         this.add(this.tabbedPane);
         this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        this.tabbedPane.setSelectedIndex(1);
     }
 
     private void createMenuBar() {
