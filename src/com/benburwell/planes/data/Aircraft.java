@@ -15,6 +15,8 @@ public class Aircraft implements Comparable<Aircraft> {
     private String callsign = "";
     private String squawk = "";
     private long packetCount = 0;
+    private double track;
+    private double groundSpeed;
 
     public Aircraft(String hexIdent) {
         this.hexIdent = hexIdent;
@@ -37,6 +39,12 @@ public class Aircraft implements Comparable<Aircraft> {
         if (packet.getSquawk() != null && !packet.getSquawk().isEmpty()) {
             this.callsign = packet.getSquawk();
         }
+        if (packet.getTrack() != null) {
+            this.track = packet.getTrack();
+        }
+        if (packet.getGroundSpeed() != null) {
+            this.groundSpeed = packet.getGroundSpeed();
+        }
     }
 
     public Position getCurrentPosition() {
@@ -57,6 +65,14 @@ public class Aircraft implements Comparable<Aircraft> {
 
     public String getHexIdent() {
         return this.hexIdent;
+    }
+
+    public double getTrack() {
+        return this.track;
+    }
+
+    public double getGroundSpeed() {
+        return this.groundSpeed;
     }
 
     @Override

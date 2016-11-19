@@ -25,13 +25,6 @@ public class AircraftMapComponent implements ViewComponent {
         this.setupMap();
         this.bindKeys();
         this.subscribeToChanges();
-
-        List<Drawable> planes = new ArrayList<>();
-        planes.add(new Plane("JBU1111", 40.6188942, -75.4947205, 36000));
-        planes.add(new Plane("JBU1112", 40.6178942, -75.4347205, 42000));
-        planes.add(new Plane("JBU1114", 40.5178942, -75.5347205, 3500));
-        planes.add(new Plane("JBU1115", 40.3178942, -75.1347205, 0));
-        this.mapPanel.setPlanes(planes);
     }
 
     public void focusNextAircraft() {
@@ -61,7 +54,6 @@ public class AircraftMapComponent implements ViewComponent {
             if (e.getKeyCode() == KeyEvent.VK_EQUALS && e.isShiftDown() && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.zoomIn();
             } else if (e.getKeyCode() == KeyEvent.VK_MINUS && e.getID() == KeyEvent.KEY_PRESSED) {
-                System.out.println("Zooming out");
                 this.mapPanel.zoomOut();
             } else if (e.getKeyCode() == KeyEvent.VK_L && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.moveEast();
@@ -95,7 +87,7 @@ public class AircraftMapComponent implements ViewComponent {
                 List<Drawable> planes = new ArrayList<>();
                 store.getAircraft().values().forEach(aircraft -> {
                     String name = !aircraft.getCallsign().isEmpty() ? aircraft.getCallsign() : aircraft.getHexIdent();
-                    planes.add(new Plane(name, aircraft.getCurrentPosition()));
+                    planes.add(new Plane(name, aircraft.getCurrentPosition(), aircraft.getTrack()));
                 });
                 mapPanel.setPlanes(planes);
                 mapPanel.validate();

@@ -52,9 +52,9 @@ public class AircraftMap extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        this.planes.forEach(item -> item.drawOn(g, this));
         this.drawPositionAndScale(g);
         this.drawRange(g);
+        this.planes.forEach(item -> item.drawOn(g, this));
     }
 
     public void drawPositionAndScale(Graphics g) {
@@ -98,12 +98,19 @@ public class AircraftMap extends JPanel {
 
     public void setPlanes(List<Drawable> planes) {
         this.planes = planes;
+        this.redraw();
+    }
+
+    public void redraw() {
         this.invalidate();
+        this.validate();
+        this.repaint();
     }
 
     public void setCenter(double latitude, double longitude) {
         this.centerLatitude = latitude;
         this.centerLongitude = longitude;
+        this.redraw();
     }
 
     public double getCenterLatitude() {
@@ -133,47 +140,35 @@ public class AircraftMap extends JPanel {
 
     public void zoomIn() {
         this.pixelsPerNauticalMile = Math.min(MAX_ZOOM_PIXELS_PER_MILE, this.pixelsPerNauticalMile * 2);
-        this.invalidate();
-        this.validate();
-        this.repaint();
+        this.redraw();
     }
 
     public void zoomOut() {
         this.pixelsPerNauticalMile = Math.max(MIN_ZOOM_PIXELS_PER_MILE, this.pixelsPerNauticalMile / 2);
-        this.invalidate();
-        this.validate();
-        this.repaint();
+        this.redraw();
     }
 
     public void moveEast() {
         double degreesToMove = PAN_INTERVAL_MILES / this.getNauticalMilesPerDegreeLongitude();
         this.centerLongitude = Math.min(this.centerLongitude + degreesToMove, MAX_LONGITUDE);
-        this.invalidate();
-        this.validate();
-        this.repaint();
+        this.redraw();
     }
 
     public void moveWest() {
         double degreesToMove = PAN_INTERVAL_MILES / this.getNauticalMilesPerDegreeLongitude();
         this.centerLongitude = Math.max(this.centerLongitude - degreesToMove, MIN_LONGITUDE);
-        this.invalidate();
-        this.validate();
-        this.repaint();
+        this.redraw();
     }
 
     public void moveNorth() {
         double degreesToMove = PAN_INTERVAL_MILES / NAUTICAL_MILES_PER_DEGREE_LATITUDE;
         this.centerLatitude = Math.min(this.centerLatitude + degreesToMove, MAX_LATITUDE);
-        this.invalidate();
-        this.validate();
-        this.repaint();
+        this.redraw();
     }
 
     public void moveSouth() {
         double degreesToMove = PAN_INTERVAL_MILES / NAUTICAL_MILES_PER_DEGREE_LATITUDE;
         this.centerLatitude = Math.max(this.centerLatitude - degreesToMove, MIN_LATITUDE);
-        this.invalidate();
-        this.validate();
-        this.repaint();
+        this.redraw();
     }
 }
