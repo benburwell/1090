@@ -1,5 +1,7 @@
 package com.benburwell.planes.data;
 
+import org.apache.commons.csv.CSVRecord;
+
 /**
  * Frequencies in kHz, elevations in ft
  *
@@ -9,6 +11,7 @@ public class NavigationAid {
     private int id;
     private String filename;
     private String ident;
+    private String name;
     private String type;
     private int frequency;
     private double latitude;
@@ -26,11 +29,60 @@ public class NavigationAid {
     private String power;
     private String associatedAirport;
 
-    public NavigationAid() {}
+    public NavigationAid(CSVRecord record) {
+        this.setId(Integer.valueOf(record.get("id")));
+        this.setFilename(record.get("filename"));
+        this.setIdent(record.get("ident"));
+        this.setName(record.get("name"));
+        this.setType(record.get("type"));
 
-    public static NavigationAid fromCSV(String row) {
-        NavigationAid aid = new NavigationAid();
-        return aid;
+        try {
+            this.setFrequency(Integer.valueOf(record.get("frequency_khz")));
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            this.setLatitude(Double.valueOf(record.get("latitude_deg")));
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            this.setLongitude(Double.valueOf(record.get("longitude_deg")));
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            this.setElevation(Integer.valueOf(record.get("elevation_ft")));
+        } catch (NumberFormatException ignored) {}
+
+        this.setIsoCountry(record.get("iso_country"));
+
+        try {
+            this.setDmeFrequency(Double.valueOf(record.get("dme_frequency_khz")));
+        } catch (NumberFormatException ignored) {}
+
+        this.setDmeChannel(record.get("dme_channel"));
+
+        try {
+            this.setDmeLatitude(Double.valueOf(record.get("dme_latitude_deg")));
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            this.setDmeLongitude(Double.valueOf(record.get("dme_longitude_deg")));
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            this.setDmeElevation(Integer.valueOf(record.get("dme_elevation_ft")));
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            this.setSlavedVariation(Double.valueOf(record.get("slaved_variation_deg")));
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            this.setMagneticVariation(Double.valueOf(record.get("magnetic_variation_deg")));
+        } catch (NumberFormatException ignored) {}
+
+        this.setUsageType(record.get("usageType"));
+        this.setPower(record.get("power"));
+        this.setAssociatedAirport(record.get("associated_airport"));
     }
 
     public int getId() {
@@ -183,5 +235,13 @@ public class NavigationAid {
 
     public void setAssociatedAirport(String associatedAirport) {
         this.associatedAirport = associatedAirport;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

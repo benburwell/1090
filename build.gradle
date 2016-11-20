@@ -2,8 +2,6 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 compileJava.options.encoding = 'UTF-8'
-
-
 mainClassName = 'com.benburwell.planes.gui.Main1090'
 
 // In this section you declare where to find the dependencies of your project
@@ -34,3 +32,4 @@ jar {
         )
     }
 }
+

@@ -2,12 +2,14 @@ package com.benburwell.planes.gui.aircraftmap;
 
 import com.benburwell.planes.data.AircraftStore;
 import com.benburwell.planes.data.AircraftStoreListener;
+import com.benburwell.planes.data.NavigationAidStore;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.ViewComponent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,14 +19,26 @@ import java.util.Collections;
  */
 public class AircraftMapComponent implements ViewComponent {
     private AircraftStore store;
+    private NavigationAidStore navaids;
     private AircraftMap mapPanel;
     private String focusedAircraftIdentifier = null;
 
     public AircraftMapComponent(AircraftStore store) {
         this.store = store;
+        this.navaids = new NavigationAidStore();
+
         this.setupMap();
         this.bindKeys();
         this.subscribeToChanges();
+        this.readNavAids();
+    }
+
+    public void readNavAids() {
+        try {
+            this.navaids.readFromFile("/home/ben/.airdata/navaids.csv");
+        } catch (IOException e) {
+            System.out.println("Could not read navaid file: " + e.getMessage());
+        }
     }
 
     public void focusNextAircraft() {
