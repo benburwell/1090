@@ -4,15 +4,26 @@ import com.benburwell.planes.data.Airport;
 import com.benburwell.planes.data.NavigationAid;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
-import com.benburwell.planes.gui.aircraftmap.symbols.*;
+import com.benburwell.planes.gui.aircraftmap.symbols.AirportSymbol;
+import com.benburwell.planes.gui.aircraftmap.symbols.NDBSymbol;
+import com.benburwell.planes.gui.aircraftmap.symbols.VORDMESymbol;
+import com.benburwell.planes.gui.aircraftmap.symbols.VORSymbol;
+import com.benburwell.planes.gui.aircraftmap.symbols.VORTACSymbol;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class AircraftMap extends JPanel {
     // geographic constants
@@ -131,7 +142,7 @@ public class AircraftMap extends JPanel {
         this.redraw();
     }
 
-    public void drawPositionAndScale(Graphics g) {
+    private void drawPositionAndScale(Graphics g) {
         Font currentFont = g.getFont();
         Font newFont = currentFont.deriveFont(FONT_SIZE);
         g.setFont(newFont);
@@ -141,7 +152,7 @@ public class AircraftMap extends JPanel {
         g.drawString(String.format("%d nm", this.getRangeRadius()), TEXT_PADDING, (int) FONT_SIZE * 3 + TEXT_PADDING);
     }
 
-    public int getRangeRadius() {
+    private int getRangeRadius() {
         double milesHigh = this.getHeight() / this.getPixelsPerNauticalMile();
         double milesWide = this.getWidth() / this.getPixelsPerNauticalMile();
         double screenMiles = Math.min(milesHigh, milesWide);
@@ -149,7 +160,7 @@ public class AircraftMap extends JPanel {
         return milesPerRing;
     }
 
-    public List<Integer> getRangeRadii() {
+    private List<Integer> getRangeRadii() {
         int rangeRadius = this.getRangeRadius();
         List<Integer> radii = new ArrayList<>();
         for (int ringNumber = 1; ringNumber <= NUMBER_OF_RANGE_RINGS; ringNumber++) {
@@ -158,7 +169,7 @@ public class AircraftMap extends JPanel {
         return radii;
     }
 
-    public void drawRange(Graphics g) {
+    private void drawRange(Graphics g) {
         int centerX = this.getWidth() / 2;
         int centerY = this.getHeight() / 2;
         g.setColor(GraphicsTheme.Colors.BASE_3);

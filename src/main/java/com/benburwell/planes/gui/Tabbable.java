@@ -1,9 +1,9 @@
 package com.benburwell.planes.gui;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
 /**
- * Created by ben on 11/17/16.
+ * @author ben
  */
 public interface Tabbable {
     String getName();

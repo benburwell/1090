@@ -1,12 +1,14 @@
 package com.benburwell.planes.sbs;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.*;
-import java.net.*;
 
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 public class TCPDataSource implements DataSource {
     private List<DataListener> subscribers = new ArrayList<>();

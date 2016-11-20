@@ -1,9 +1,9 @@
 package com.benburwell.planes.gui;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
- * Created by ben on 11/18/16.
+ * @author ben
  */
 public class GraphicsTheme {
     public static class Colors {

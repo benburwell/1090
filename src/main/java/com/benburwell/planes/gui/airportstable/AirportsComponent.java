@@ -5,20 +5,20 @@ import com.benburwell.planes.data.CSVObjectStore;
 import com.benburwell.planes.gui.Tabbable;
 import com.benburwell.planes.gui.navigationaids.AirportsTableModel;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class AirportsComponent implements Tabbable {
     private JScrollPane scrollPane = new JScrollPane();
-    private JTable table = new JTable();
-    private AirportsTableModel tableModel;
 
     public AirportsComponent(CSVObjectStore<Airport> airportStore) {
-        this.tableModel = new AirportsTableModel(airportStore.getObjects());
-        this.table = new JTable(this.tableModel);
-        this.table.setFillsViewportHeight(true);
+        AirportsTableModel tableModel = new AirportsTableModel(airportStore.getObjects());
+        JTable table = new JTable(tableModel);
+        table.setFillsViewportHeight(true);
         this.scrollPane = new JScrollPane(table);
     }
 

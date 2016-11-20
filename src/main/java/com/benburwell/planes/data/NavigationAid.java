@@ -5,7 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 /**
  * Frequencies in kHz, elevations in ft
  *
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class NavigationAid extends AbstractCSVReader {
     private int id;

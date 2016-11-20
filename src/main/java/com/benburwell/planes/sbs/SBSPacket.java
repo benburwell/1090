@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 public class SBSPacket {
     private MessageType messageType;

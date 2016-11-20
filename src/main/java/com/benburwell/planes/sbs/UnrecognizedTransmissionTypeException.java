@@ -1,7 +1,7 @@
 package com.benburwell.planes.sbs;
 
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 public class UnrecognizedTransmissionTypeException extends Exception {
     private int code;

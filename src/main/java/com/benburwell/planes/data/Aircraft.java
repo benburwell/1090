@@ -7,14 +7,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 public class Aircraft implements Comparable<Aircraft> {
     private final String hexIdent;
     private Position currentPosition = new Position();
     private List<Position> positionHistory = new ArrayList<>();
     private String callsign = "";
-    private String squawk = "";
     private long packetCount = 0;
     private double track;
     private double groundSpeed;
@@ -73,10 +72,6 @@ public class Aircraft implements Comparable<Aircraft> {
 
     public String getCallsign() {
         return callsign;
-    }
-
-    public String getSquawk() {
-        return squawk;
     }
 
     public Long getPacketCount() {

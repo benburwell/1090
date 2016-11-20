@@ -1,43 +1,42 @@
 package com.benburwell.planes.gui.aircraftmap;
 
-import com.benburwell.planes.data.*;
+import com.benburwell.planes.data.AircraftStore;
+import com.benburwell.planes.data.AircraftStoreListener;
+import com.benburwell.planes.data.Airport;
+import com.benburwell.planes.data.CSVObjectStore;
+import com.benburwell.planes.data.NavigationAid;
 import com.benburwell.planes.gui.Tabbable;
 import com.benburwell.planes.gui.aircraftmap.symbols.PlaneSymbol;
 
-import java.util.*;
+import java.awt.KeyboardFocusManager;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JComponent;
 import javax.swing.Timer;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 /**
- * Created by ben on 11/18/16.
+ * @author ben
  */
 public class AircraftMapComponent implements Tabbable {
     public final long PLANE_EXPIRY_MILLIS = 60 * 1000;
     public final int MAX_REFRESH_MILLIS = 5 * 1000;
 
     private AircraftStore store;
-    private CSVObjectStore<NavigationAid> navaids;
-    private CSVObjectStore<Airport> airportStore;
     private AircraftMap mapPanel;
     private AircraftStoreListener aircraftStoreListener;
 
     public AircraftMapComponent(AircraftStore store, CSVObjectStore<NavigationAid> navaids, CSVObjectStore<Airport> airportStore) {
         this.store = store;
-        this.navaids = navaids;
-        this.airportStore = airportStore;
 
         this.setupMap();
         this.bindKeys();
         this.setupListener();
 
         this.store.subscribe(this.aircraftStoreListener);
-        this.mapPanel.addNavAids(this.navaids.getObjects());
-        this.mapPanel.addAirports(this.airportStore.getObjects());
+        this.mapPanel.addNavAids(navaids.getObjects());
+        this.mapPanel.addAirports(airportStore.getObjects());
 
         final Timer t = new Timer(MAX_REFRESH_MILLIS, e -> {
             AircraftMapComponent.this.aircraftStoreListener.aircraftStoreChanged();

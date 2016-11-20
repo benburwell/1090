@@ -1,9 +1,12 @@
 package com.benburwell.planes.gui;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
- * Created by ben on 11/17/16.
+ * @author ben
  */
 public class TCPConnectionOptionDialog {
     public static final String DEFAULT_HOSTNAME = "10.0.0.111";

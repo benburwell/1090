@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 public class AircraftTableModel extends AbstractTableModel {
     private Map<String,Aircraft> aircraftMap;
-    private String[] columnNames = { "Hex", "Callsign", "Squawk", "Latitude", "Longitude", "Altitude", "Vertical Rate", "Track", "Ground Speed", "Packets" };
+    private String[] columnNames = { "Hex", "Callsign", "Latitude", "Longitude", "Altitude", "Vertical Rate", "Track", "Ground Speed", "Packets" };
 
     public AircraftTableModel(AircraftStore store) {
         this.aircraftMap = store.getAircraft();
@@ -58,20 +58,18 @@ public class AircraftTableModel extends AbstractTableModel {
             case 1:
                 return aircraft.getCallsign();
             case 2:
-                return aircraft.getSquawk();
-            case 3:
                 return aircraft.getCurrentPosition().getLatitude();
-            case 4:
+            case 3:
                 return aircraft.getCurrentPosition().getLongitude();
-            case 5:
+            case 4:
                 return aircraft.getCurrentPosition().getAltitude();
-            case 6:
+            case 5:
                 return aircraft.getVerticalRate();
-            case 7:
+            case 6:
                 return aircraft.getTrack();
-            case 8:
+            case 7:
                 return aircraft.getGroundSpeed();
-            case 9:
+            case 8:
                 return aircraft.getPacketCount();
         }
         return "";

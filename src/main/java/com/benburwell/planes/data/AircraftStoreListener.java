@@ -1,7 +1,7 @@
 package com.benburwell.planes.data;
 
 /**
- * Created by ben on 11/17/16.
+ * @author ben
  */
 public interface AircraftStoreListener {
     void aircraftStoreChanged();

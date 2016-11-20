@@ -5,20 +5,20 @@ import com.benburwell.planes.data.NavigationAid;
 import com.benburwell.planes.gui.Tabbable;
 import com.benburwell.planes.gui.airportstable.NavigationAidsTableModel;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class NavigationAidComponent implements Tabbable {
-    private JTable table;
-    private NavigationAidsTableModel tableModel;
     private JScrollPane scrollPane;
 
     public NavigationAidComponent(CSVObjectStore<NavigationAid> store) {
-        this.tableModel = new NavigationAidsTableModel(store);
-        this.table = new JTable(this.tableModel);
-        this.table.setFillsViewportHeight(true);
+        NavigationAidsTableModel tableModel = new NavigationAidsTableModel(store);
+        JTable table = new JTable(tableModel);
+        table.setFillsViewportHeight(true);
         this.scrollPane = new JScrollPane(table);
     }
 

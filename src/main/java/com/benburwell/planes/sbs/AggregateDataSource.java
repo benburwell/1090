@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 public class AggregateDataSource implements DataSource {
     private List<DataListener> subscribers = new ArrayList<>();

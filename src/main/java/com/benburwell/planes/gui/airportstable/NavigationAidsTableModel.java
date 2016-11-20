@@ -6,7 +6,7 @@ import com.benburwell.planes.data.NavigationAid;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class NavigationAidsTableModel extends AbstractTableModel {
     private final String[] COLUMN_NAMES = { "Ident", "Type", "Frequency", "DME Frequency", "DME Channel", "Usage Type", "Power", "Airport" };

@@ -3,7 +3,7 @@ package com.benburwell.planes.gui.aircraftmap;
 import com.benburwell.planes.data.Position;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class GeoPoint {
     private double latitude;

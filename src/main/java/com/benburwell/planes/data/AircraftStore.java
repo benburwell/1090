@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Created by ben on 11/17/16.
+ * @author ben
  */
 public class AircraftStore {
     private Map<String,Aircraft> aircraftMap = new HashMap<>();

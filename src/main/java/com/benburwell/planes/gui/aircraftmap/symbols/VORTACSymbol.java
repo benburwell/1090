@@ -4,12 +4,11 @@ import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
 import com.benburwell.planes.gui.aircraftmap.AircraftMap;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
-import com.benburwell.planes.gui.aircraftmap.symbols.VORSymbol;
 
-import java.awt.*;
+import java.awt.Graphics;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class VORTACSymbol extends VORSymbol implements Drawable {
     public VORTACSymbol(String name, Position pos, int frequency) {

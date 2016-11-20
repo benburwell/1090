@@ -1,21 +1,28 @@
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 
 package com.benburwell.planes.gui;
 
+import com.benburwell.planes.data.AircraftStore;
+import com.benburwell.planes.data.Airport;
+import com.benburwell.planes.data.CSVObjectStore;
+import com.benburwell.planes.data.NavigationAid;
+import com.benburwell.planes.gui.aircraftmap.AircraftMapComponent;
 import com.benburwell.planes.gui.aircrafttable.AircraftTableComponent;
 import com.benburwell.planes.gui.airportstable.AirportsComponent;
 import com.benburwell.planes.gui.navigationaids.NavigationAidComponent;
-import com.benburwell.planes.sbs.*;
-import com.benburwell.planes.data.*;
-import com.benburwell.planes.gui.aircraftmap.*;
+import com.benburwell.planes.sbs.AggregateDataSource;
+import com.benburwell.planes.sbs.SBSPacket;
+import com.benburwell.planes.sbs.TCPDataSource;
 
-
+import java.awt.EventQueue;
 import java.util.List;
 import java.util.ArrayList;
-import java.awt.*;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.WindowConstants;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 

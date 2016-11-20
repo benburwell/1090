@@ -3,20 +3,20 @@ package com.benburwell.planes.gui.aircrafttable;
 import com.benburwell.planes.data.AircraftStore;
 import com.benburwell.planes.gui.Tabbable;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
- * Created by ben on 11/17/16.
+ * @author ben
  */
 public class AircraftTableComponent implements Tabbable {
-    private JTable table;
-    private AircraftTableModel tableModel;
     private JScrollPane scrollPane;
 
     public AircraftTableComponent(AircraftStore store) {
-        this.tableModel = new AircraftTableModel(store);
-        this.table = new JTable(this.tableModel);
-        this.table.setFillsViewportHeight(true);
+        AircraftTableModel tableModel = new AircraftTableModel(store);
+        JTable table = new JTable(tableModel);
+        table.setFillsViewportHeight(true);
         this.scrollPane = new JScrollPane(table);
     }
 

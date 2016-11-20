@@ -7,14 +7,16 @@ import com.benburwell.planes.gui.aircraftmap.AircraftMap;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
 import com.benburwell.planes.gui.aircraftmap.GeoPoint;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class PlaneSymbol extends GeoPoint implements Drawable {
     public final int TRIANGLE_HEIGHT = 6;

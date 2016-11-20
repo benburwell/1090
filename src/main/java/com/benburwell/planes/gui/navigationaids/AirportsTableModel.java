@@ -6,12 +6,12 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class AirportsTableModel extends AbstractTableModel {
     public final String[] COLUMN_HEADERS = {"Identifier", "Name", "Country", "Municipality", "Scheduled Service", "IATA Code", "Local Code"};
 
-    public List<Airport> airports;
+    private List<Airport> airports;
 
     public AirportsTableModel(List<Airport> airports) {
         this.airports = airports;

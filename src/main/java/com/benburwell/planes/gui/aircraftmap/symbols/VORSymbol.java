@@ -6,10 +6,10 @@ import com.benburwell.planes.gui.aircraftmap.AircraftMap;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
 import com.benburwell.planes.gui.aircraftmap.GeoPoint;
 
-import java.awt.*;
+import java.awt.Graphics;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class VORSymbol extends GeoPoint implements Drawable {
     public static final int RADIUS = 11;

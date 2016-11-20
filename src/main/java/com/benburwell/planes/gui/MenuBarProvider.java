@@ -1,10 +1,12 @@
 package com.benburwell.planes.gui;
 
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 
 /**
- * Created by ben on 11/17/16.
+ * @author ben
  */
 public class MenuBarProvider {
     private JMenuBar menubar = new JMenuBar();

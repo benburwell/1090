@@ -4,13 +4,18 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ben on 11/19/16.
+ * @author ben
  */
 public class CSVObjectStore<T extends AbstractCSVReader> {
     private List<T> objects = new ArrayList<>();

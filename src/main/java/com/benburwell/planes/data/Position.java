@@ -3,7 +3,7 @@ package com.benburwell.planes.data;
 import java.util.Date;
 
 /**
- * Created by ben on 11/15/16.
+ * @author ben
  */
 public class Position {
     private Date timestamp = new Date(System.currentTimeMillis());
