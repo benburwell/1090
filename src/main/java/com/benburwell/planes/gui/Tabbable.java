@@ -5,6 +5,7 @@ import javax.swing.*;
 /**
  * Created by ben on 11/17/16.
  */
-public interface ViewComponent {
+public interface Tabbable {
+    String getName();
     JComponent getComponent();
 }

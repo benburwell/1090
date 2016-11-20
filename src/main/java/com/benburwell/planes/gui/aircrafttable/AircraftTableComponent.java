@@ -1,14 +1,14 @@
 package com.benburwell.planes.gui.aircrafttable;
 
 import com.benburwell.planes.data.AircraftStore;
-import com.benburwell.planes.gui.ViewComponent;
+import com.benburwell.planes.gui.Tabbable;
 
 import javax.swing.*;
 
 /**
  * Created by ben on 11/17/16.
  */
-public class AircraftTableComponent implements ViewComponent {
+public class AircraftTableComponent implements Tabbable {
     private JTable table;
     private AircraftTableModel tableModel;
     private JScrollPane scrollPane;
@@ -23,5 +23,10 @@ public class AircraftTableComponent implements ViewComponent {
     @Override
     public JComponent getComponent() {
         return this.scrollPane;
+    }
+
+    @Override
+    public String getName() {
+        return "Aircraft";
     }
 }

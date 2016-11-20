@@ -2,14 +2,15 @@ package com.benburwell.planes.gui.navigationaids;
 
 import com.benburwell.planes.data.CSVObjectStore;
 import com.benburwell.planes.data.NavigationAid;
-import com.benburwell.planes.gui.ViewComponent;
+import com.benburwell.planes.gui.Tabbable;
+import com.benburwell.planes.gui.airportstable.NavigationAidsTableModel;
 
 import javax.swing.*;
 
 /**
  * Created by ben on 11/19/16.
  */
-public class NavigationAidComponent implements ViewComponent {
+public class NavigationAidComponent implements Tabbable {
     private JTable table;
     private NavigationAidsTableModel tableModel;
     private JScrollPane scrollPane;
@@ -24,5 +25,10 @@ public class NavigationAidComponent implements ViewComponent {
     @Override
     public JComponent getComponent() {
         return this.scrollPane;
+    }
+
+    @Override
+    public String getName() {
+        return "Navigation Aids";
     }
 }

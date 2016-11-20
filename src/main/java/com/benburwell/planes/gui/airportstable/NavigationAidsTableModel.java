@@ -1,4 +1,4 @@
-package com.benburwell.planes.gui.navigationaids;
+package com.benburwell.planes.gui.airportstable;
 
 import com.benburwell.planes.data.CSVObjectStore;
 import com.benburwell.planes.data.NavigationAid;

@@ -5,11 +5,15 @@
 package com.benburwell.planes.gui;
 
 import com.benburwell.planes.gui.aircrafttable.AircraftTableComponent;
+import com.benburwell.planes.gui.airportstable.AirportsComponent;
 import com.benburwell.planes.gui.navigationaids.NavigationAidComponent;
 import com.benburwell.planes.sbs.*;
 import com.benburwell.planes.data.*;
 import com.benburwell.planes.gui.aircraftmap.*;
 
+
+import java.util.List;
+import java.util.ArrayList;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -53,15 +57,12 @@ public class Main1090 extends JFrame {
     }
 
     private void createTabs() {
-        AircraftMapComponent aircraftMap = new AircraftMapComponent(this.aircraft, this.navaids, this.airports);
-        this.tabbedPane.addTab("Live Map", aircraftMap.getComponent());
-
-        AircraftTableComponent aircraftData = new AircraftTableComponent(this.aircraft);
-        this.tabbedPane.addTab("Aircraft Data", aircraftData.getComponent());
-
-        NavigationAidComponent navaids = new NavigationAidComponent(this.navaids);
-        this.tabbedPane.addTab("Navigation Aids", navaids.getComponent());
-
+        List<Tabbable> tabs = new ArrayList<>();
+        tabs.add(new AircraftMapComponent(this.aircraft, this.navaids, this.airports));
+        tabs.add(new AircraftTableComponent(this.aircraft));
+        tabs.add(new NavigationAidComponent(this.navaids));
+        tabs.add(new AirportsComponent(this.airports));
+        tabs.forEach(tab -> this.tabbedPane.addTab(tab.getName(), tab.getComponent()));
         this.add(this.tabbedPane);
         this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }

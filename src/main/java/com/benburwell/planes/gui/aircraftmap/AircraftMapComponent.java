@@ -1,7 +1,7 @@
 package com.benburwell.planes.gui.aircraftmap;
 
 import com.benburwell.planes.data.*;
-import com.benburwell.planes.gui.ViewComponent;
+import com.benburwell.planes.gui.Tabbable;
 import com.benburwell.planes.gui.aircraftmap.symbols.PlaneSymbol;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by ben on 11/18/16.
  */
-public class AircraftMapComponent implements ViewComponent {
+public class AircraftMapComponent implements Tabbable {
     private AircraftStore store;
     private CSVObjectStore<NavigationAid> navaids;
     private CSVObjectStore<Airport> airportStore;
@@ -112,4 +112,8 @@ public class AircraftMapComponent implements ViewComponent {
         return this.mapPanel;
     }
 
+    @Override
+    public String getName() {
+        return "Map";
+    }
 }

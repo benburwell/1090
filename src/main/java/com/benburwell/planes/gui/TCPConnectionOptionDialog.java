@@ -5,7 +5,7 @@ import javax.swing.*;
 /**
  * Created by ben on 11/17/16.
  */
-public class TCPConnectionOptionDialog implements ViewComponent {
+public class TCPConnectionOptionDialog {
     public static final String DEFAULT_HOSTNAME = "10.0.0.111";
     public static final int DEFAULT_TCP_PORT = 30003;
 
@@ -14,7 +14,6 @@ public class TCPConnectionOptionDialog implements ViewComponent {
     private JTextField portField = new JTextField(5);
     private JLabel descriptionLabel = new JLabel("Add a network data source that provides data in the SBS-1 format");
 
-    @Override
     public JComponent getComponent() {
         // set properties
         hostField.setText(DEFAULT_HOSTNAME);

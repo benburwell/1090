@@ -92,7 +92,7 @@ public class AircraftMap extends JPanel {
     }
 
     /**
-     * Paint the ViewComponent on a Graphics instance
+     * Paint the Tabbable on a Graphics instance
      *
      * @param g the graphics context to paint on
      */
