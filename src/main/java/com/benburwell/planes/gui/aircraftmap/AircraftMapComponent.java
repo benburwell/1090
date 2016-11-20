@@ -47,6 +47,23 @@ public class AircraftMapComponent implements Tabbable {
         this.mapPanel.setCenter(40.6188942, -75.4947205);
     }
 
+    /**
+     * Handle keyboard shortcuts
+     *
+     * Key  Function
+     * ===  ========
+     *  h   pan west
+     *  j   pan south
+     *  k   pan north
+     *  l   pan east
+     *  +   zoom in
+     *  -   zoom out
+     *  0   reset lat/lon to home
+     *
+     *  n   toggle navaids
+     *  v   toggle routes
+     *  f   toggle airfields
+     */
     private void bindKeys() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
             if (e.getKeyCode() == KeyEvent.VK_EQUALS && e.isShiftDown() && e.getID() == KeyEvent.KEY_PRESSED) {
@@ -65,9 +82,9 @@ public class AircraftMapComponent implements Tabbable {
                 this.mapPanel.setCenter(40.6188942, -75.4947205);
             } else if (e.getKeyCode() == KeyEvent.VK_N && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.toggleNavAids();
-            } else if (e.getKeyCode() == KeyEvent.VK_A && e.getID() == KeyEvent.KEY_PRESSED) {
+            } else if (e.getKeyCode() == KeyEvent.VK_F && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.toggleAirports();
-            } else if (e.getKeyCode() == KeyEvent.VK_R && e.getID() == KeyEvent.KEY_PRESSED) {
+            } else if (e.getKeyCode() == KeyEvent.VK_V && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.toggleRoutes();
             }
             return false;

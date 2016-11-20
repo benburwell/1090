@@ -3,6 +3,7 @@ package com.benburwell.planes.gui.aircraftmap.symbols;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
 import com.benburwell.planes.gui.aircraftmap.AircraftMap;
+import com.benburwell.planes.gui.aircraftmap.DisplayMode;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
 
 import java.awt.Graphics;
@@ -16,9 +17,9 @@ public class VORTACSymbol extends VORSymbol implements Drawable {
     }
 
     @Override
-    public void drawOn(Graphics graphicsContext, AircraftMap map) {
-        super.drawOn(graphicsContext, map);
-        if (this.shouldDrawOn(map)) {
+    public void drawOn(Graphics graphicsContext, AircraftMap map, DisplayMode displayMode) {
+        super.drawOn(graphicsContext, map, displayMode);
+        if (this.shouldDrawOn(map) && !displayMode.equals(DisplayMode.HIDDEN)) {
             int x = this.getX(map);
             int y = this.getY(map);
             graphicsContext.setColor(GraphicsTheme.Styles.MAP_NAVAID_COLOR);

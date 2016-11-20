@@ -3,6 +3,7 @@ package com.benburwell.planes.gui.aircraftmap.symbols;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
 import com.benburwell.planes.gui.aircraftmap.AircraftMap;
+import com.benburwell.planes.gui.aircraftmap.DisplayMode;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
 import com.benburwell.planes.gui.aircraftmap.GeoPoint;
 
@@ -26,8 +27,8 @@ public class NDBSymbol extends GeoPoint implements Drawable {
     }
 
     @Override
-    public void drawOn(Graphics g, AircraftMap map) {
-        if (this.shouldDrawOn(map)) {
+    public void drawOn(Graphics g, AircraftMap map, DisplayMode displayMode) {
+        if (this.shouldDrawOn(map) && !displayMode.equals(DisplayMode.HIDDEN)) {
             g.setColor(GraphicsTheme.Styles.MAP_NAVAID_COLOR);
 
             int x = this.getX(map);
@@ -35,8 +36,10 @@ public class NDBSymbol extends GeoPoint implements Drawable {
             g.fillOval(x - INNER_RADIUS, y - INNER_RADIUS, INNER_RADIUS * 2, INNER_RADIUS * 2);
             g.drawOval(x - OUTER_RADIUS, y - OUTER_RADIUS, OUTER_RADIUS * 2, OUTER_RADIUS * 2);
 
-            g.drawString(this.name, x + OUTER_RADIUS + TEXT_OFFSET, y);
-            g.drawString("" + this.frequency, x + OUTER_RADIUS + TEXT_OFFSET, y + g.getFontMetrics().getHeight());
+            if (displayMode.equals(DisplayMode.DETAILED)) {
+                g.drawString(this.name, x + OUTER_RADIUS + TEXT_OFFSET, y);
+                g.drawString("" + this.frequency, x + OUTER_RADIUS + TEXT_OFFSET, y + g.getFontMetrics().getHeight());
+            }
         }
     }
 }

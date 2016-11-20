@@ -3,6 +3,7 @@ package com.benburwell.planes.gui.aircraftmap.symbols;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
 import com.benburwell.planes.gui.aircraftmap.AircraftMap;
+import com.benburwell.planes.gui.aircraftmap.DisplayMode;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
 import com.benburwell.planes.gui.aircraftmap.GeoPoint;
 
@@ -28,8 +29,8 @@ public class VORSymbol extends GeoPoint implements Drawable {
     }
 
     @Override
-    public void drawOn(Graphics graphicsContext, AircraftMap map) {
-        if (this.shouldDrawOn(map)) {
+    public void drawOn(Graphics graphicsContext, AircraftMap map, DisplayMode displayMode) {
+        if (this.shouldDrawOn(map) && !displayMode.equals(DisplayMode.HIDDEN)) {
             int x = this.getX(map);
             int y = this.getY(map);
             graphicsContext.setColor(GraphicsTheme.Styles.MAP_NAVAID_COLOR);
@@ -42,8 +43,10 @@ public class VORSymbol extends GeoPoint implements Drawable {
             int[] ys = { y, y - HEIGHT, y - HEIGHT, y, y + HEIGHT, y + HEIGHT, y };
             graphicsContext.drawPolygon(xs, ys, 7);
 
-            graphicsContext.drawString(this.name, x + RADIUS + TEXT_OFFSET, y);
-            graphicsContext.drawString(String.format("%.3f", this.frequency / 1000.0), x + RADIUS + TEXT_OFFSET, y + graphicsContext.getFontMetrics().getHeight());
+            if (displayMode.equals(DisplayMode.DETAILED)) {
+                graphicsContext.drawString(this.name, x + RADIUS + TEXT_OFFSET, y);
+                graphicsContext.drawString(String.format("%.3f", this.frequency / 1000.0), x + RADIUS + TEXT_OFFSET, y + graphicsContext.getFontMetrics().getHeight());
+            }
         }
     }
 }

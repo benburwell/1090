@@ -54,9 +54,10 @@ public class AircraftMap extends JPanel {
     private double centerLatitude;
     private double centerLongitude;
     private int pixelsPerNauticalMile = 10;
-    private boolean showNavAids = true;
-    private boolean showAirports = true;
-    private boolean showRoutes = true;
+
+    private DisplayMode navaidDisplayMode = DisplayMode.HIDDEN;
+    private DisplayMode airportDisplayMode = DisplayMode.HIDDEN;
+    private DisplayMode routeDisplayMode = DisplayMode.HIDDEN;
 
     /**
      * Construct a map
@@ -125,42 +126,36 @@ public class AircraftMap extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Base layer -- Routes
-        if (this.showRoutes) {
-            this.routes.forEach(route -> route.drawOn(g2d, this));
-        }
+        this.routes.forEach(route -> route.drawOn(g2d, this, this.routeDisplayMode));
 
         // Compass rose
         this.drawPositionAndScale(g2d);
         this.drawRange(g2d);
 
         // Aids to Navigation
-        if (this.showNavAids) {
-            this.navaids.forEach(aid -> aid.drawOn(g2d, this));
-        }
+        this.navaids.forEach(aid -> aid.drawOn(g2d, this, this.navaidDisplayMode));
 
         // Airports
-        if (this.showAirports) {
-            this.airports.forEach(airport -> airport.drawOn(g2d, this));
-        }
+        this.airports.forEach(airport -> airport.drawOn(g2d, this, this.airportDisplayMode));
 
         // Planes
-        this.planes.forEach(item -> item.drawOn(g2d, this));
+        this.planes.forEach(item -> item.drawOn(g2d, this, DisplayMode.DETAILED));
 
         g2d.dispose();
     }
 
     public void toggleNavAids() {
-        this.showNavAids = !this.showNavAids;
+        this.navaidDisplayMode = this.navaidDisplayMode.next();
         this.redraw();
     }
 
     public void toggleAirports() {
-        this.showAirports = !this.showAirports;
+        this.airportDisplayMode = this.airportDisplayMode.next();
         this.redraw();
     }
 
     public void toggleRoutes() {
-        this.showRoutes = !this.showRoutes;
+        this.routeDisplayMode = this.routeDisplayMode.next();
         this.redraw();
     }
 

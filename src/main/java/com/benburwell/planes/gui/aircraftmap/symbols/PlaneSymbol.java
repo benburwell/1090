@@ -4,6 +4,7 @@ import com.benburwell.planes.data.Aircraft;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
 import com.benburwell.planes.gui.aircraftmap.AircraftMap;
+import com.benburwell.planes.gui.aircraftmap.DisplayMode;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
 import com.benburwell.planes.gui.aircraftmap.GeoPoint;
 
@@ -110,8 +111,9 @@ public class PlaneSymbol extends GeoPoint implements Drawable {
         return (int) (this.speed / 60.0 * pixelsPerNauticalMile);
     }
 
-    public void drawOn(Graphics g, AircraftMap map) {
-        if (this.shouldDrawOn(map)) {
+    @Override
+    public void drawOn(Graphics g, AircraftMap map, DisplayMode displayMode) {
+        if (this.shouldDrawOn(map) && !displayMode.equals(DisplayMode.HIDDEN)) {
             int x = this.getX(map);
             int y = this.getY(map);
 
@@ -130,10 +132,12 @@ public class PlaneSymbol extends GeoPoint implements Drawable {
             });
 
             // draw the name of the plane
-            g.setColor(GraphicsTheme.Styles.MAP_LABEL_COLOR);
-            g.drawString(this.getDisplayName(), x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y);
-            String infoString = String.format("%d%s %.1f", this.getFlightLevel(), this.getVerticalRateIndicator(), this.getSpeed());
-            g.drawString(infoString,  x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y + g.getFontMetrics().getHeight());
+            if (displayMode.equals(DisplayMode.DETAILED)) {
+                g.setColor(GraphicsTheme.Styles.MAP_LABEL_COLOR);
+                g.drawString(this.getDisplayName(), x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y);
+                String infoString = String.format("%d%s %.1f", this.getFlightLevel(), this.getVerticalRateIndicator(), this.getSpeed());
+                g.drawString(infoString, x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y + g.getFontMetrics().getHeight());
+            }
         }
     }
 }

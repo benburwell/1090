@@ -6,5 +6,5 @@ import java.awt.Graphics;
  * @author ben
  */
 public interface Drawable {
-    void drawOn(Graphics graphicsContext, AircraftMap map);
+    void drawOn(Graphics graphicsContext, AircraftMap map, DisplayMode displayMode);
 }
