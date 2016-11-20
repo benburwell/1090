@@ -30,6 +30,12 @@ public class GeoPoint {
         return yPosition;
     }
 
+    public boolean shouldDrawOn(AircraftMap map) {
+        int x = this.getX(map);
+        int y = this.getY(map);
+        return (x >= 0 && x <= map.getWidth() && y >= 0 && y <= map.getHeight());
+    }
+
     public double getAltitude() {
         return this.altitude;
     }

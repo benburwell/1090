@@ -11,10 +11,13 @@ import com.benburwell.planes.gui.aircraftmap.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 public class Main1090 extends JFrame {
     private AggregateDataSource sbsDataSource = new AggregateDataSource();
     private AircraftStore aircraft = new AircraftStore();
+    private NavigationAidStore navaids = new NavigationAidStore();
+    private AirportStore airports = new AirportStore();
     private int currentTcpConnection = 0;
     private JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -32,6 +35,18 @@ public class Main1090 extends JFrame {
 
         this.openDataSource();
 
+        try {
+            this.navaids.readFromFile("/home/ben/.airdata/navaids.csv");
+        } catch (IOException e) {
+            System.out.println("Could not read navaid file: " + e.getMessage());
+        }
+
+        try {
+            this.airports.readFromFile("/home/ben/.airdata/airports.csv");
+        } catch (IOException e) {
+            System.out.println("Could not read airport file: " + e.getMessage());
+        }
+
         this.createTabs();
     }
 
@@ -39,8 +54,11 @@ public class Main1090 extends JFrame {
         AircraftTableComponent aircraftData = new AircraftTableComponent(this.aircraft);
         this.tabbedPane.addTab("Aircraft Data", aircraftData.getComponent());
 
-        AircraftMapComponent aircraftMap = new AircraftMapComponent(this.aircraft);
+        AircraftMapComponent aircraftMap = new AircraftMapComponent(this.aircraft, this.navaids, this.airports);
         this.tabbedPane.addTab("Live Map", aircraftMap.getComponent());
+
+        NavigationAidComponent navaids = new NavigationAidComponent(this.navaids);
+        this.tabbedPane.addTab("Navigation Aids", navaids.getComponent());
 
         this.add(this.tabbedPane);
         this.tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);

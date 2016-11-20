@@ -1,18 +1,14 @@
 package com.benburwell.planes.gui.aircraftmap;
 
-import com.benburwell.planes.data.AircraftStore;
-import com.benburwell.planes.data.AircraftStoreListener;
-import com.benburwell.planes.data.NavigationAidStore;
-import com.benburwell.planes.data.Position;
+import com.benburwell.planes.data.*;
 import com.benburwell.planes.gui.ViewComponent;
+import com.benburwell.planes.gui.aircraftmap.symbols.PlaneSymbol;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by ben on 11/18/16.
@@ -20,25 +16,20 @@ import java.util.Collections;
 public class AircraftMapComponent implements ViewComponent {
     private AircraftStore store;
     private NavigationAidStore navaids;
+    private AirportStore airportStore;
     private AircraftMap mapPanel;
     private String focusedAircraftIdentifier = null;
 
-    public AircraftMapComponent(AircraftStore store) {
+    public AircraftMapComponent(AircraftStore store, NavigationAidStore navaids, AirportStore airportStore) {
         this.store = store;
-        this.navaids = new NavigationAidStore();
+        this.navaids = navaids;
+        this.airportStore = airportStore;
 
         this.setupMap();
         this.bindKeys();
         this.subscribeToChanges();
-        this.readNavAids();
-    }
-
-    public void readNavAids() {
-        try {
-            this.navaids.readFromFile("/home/ben/.airdata/navaids.csv");
-        } catch (IOException e) {
-            System.out.println("Could not read navaid file: " + e.getMessage());
-        }
+        this.mapPanel.addNavAids(this.navaids.getNavigationAids());
+        this.mapPanel.addAirports(this.airportStore.getAirports());
     }
 
     public void focusNextAircraft() {
@@ -82,6 +73,10 @@ public class AircraftMapComponent implements ViewComponent {
             } else if (e.getKeyCode() == KeyEvent.VK_TAB && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.focusNextAircraft();
                 this.centerMapOnPlane(this.focusedAircraftIdentifier);
+            } else if (e.getKeyCode() == KeyEvent.VK_N && e.getID() == KeyEvent.KEY_PRESSED) {
+                this.mapPanel.toggleNavAids();
+            } else if (e.getKeyCode() == KeyEvent.VK_A && e.getID() == KeyEvent.KEY_PRESSED) {
+                this.mapPanel.toggleAirports();
             }
             return false;
         });
@@ -99,7 +94,7 @@ public class AircraftMapComponent implements ViewComponent {
             @Override
             public void aircraftStoreChanged() {
                 List<Drawable> planes = new ArrayList<>();
-                store.getAircraft().values().forEach(aircraft -> planes.add(new Plane(aircraft)));
+                store.getAircraft().values().forEach(aircraft -> planes.add(new PlaneSymbol(aircraft)));
                 mapPanel.setPlanes(planes);
                 mapPanel.validate();
                 mapPanel.repaint();

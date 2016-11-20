@@ -1,8 +1,11 @@
-package com.benburwell.planes.gui.aircraftmap;
+package com.benburwell.planes.gui.aircraftmap.symbols;
 
 import com.benburwell.planes.data.Aircraft;
 import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
+import com.benburwell.planes.gui.aircraftmap.AircraftMap;
+import com.benburwell.planes.gui.aircraftmap.Drawable;
+import com.benburwell.planes.gui.aircraftmap.GeoPoint;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -10,7 +13,7 @@ import java.awt.geom.AffineTransform;
 /**
  * Created by ben on 11/19/16.
  */
-public class Plane extends GeoPoint implements Drawable {
+public class PlaneSymbol extends GeoPoint implements Drawable {
     public final int TRIANGLE_HEIGHT = 6;
     public final int TRIANGLE_WIDTH = 4;
     public final int TEXT_OFFSET_X = 10;
@@ -22,15 +25,15 @@ public class Plane extends GeoPoint implements Drawable {
     private double speed;
     private double verticalRate;
 
-    public Plane(Aircraft ac) {
+    public PlaneSymbol(Aircraft ac) {
         this(ac.getCallsign(), ac.getCurrentPosition(), ac.getTrack(), ac.getGroundSpeed(), ac.getVerticalRate());
     }
 
-    public Plane(String name, Position position, double heading, double speed, double verticalRate) {
+    public PlaneSymbol(String name, Position position, double heading, double speed, double verticalRate) {
         this(name, position.getLatitude(), position.getLongitude(), position.getAltitude(), heading, speed, verticalRate);
     }
 
-    public Plane(String name, double latitude, double longitude, double altitude, double heading, double speed, double verticalRate) {
+    public PlaneSymbol(String name, double latitude, double longitude, double altitude, double heading, double speed, double verticalRate) {
         super(latitude, longitude, altitude);
         this.name = name;
         this.heading = heading;
@@ -104,10 +107,10 @@ public class Plane extends GeoPoint implements Drawable {
     }
 
     public void drawOn(Graphics g, AircraftMap map) {
-        int x = this.getX(map);
-        int y = this.getY(map);
+        if (this.shouldDrawOn(map)) {
+            int x = this.getX(map);
+            int y = this.getY(map);
 
-        if (x >= 0 && x <= map.getSize().getWidth() && y >= 0 && y <= map.getSize().getHeight()) {
             // draw the plane dot
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setColor(this.getPlaneColor());

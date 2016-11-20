@@ -1,6 +1,10 @@
 package com.benburwell.planes.gui.aircraftmap;
 
+import com.benburwell.planes.data.Airport;
+import com.benburwell.planes.data.NavigationAid;
+import com.benburwell.planes.data.Position;
 import com.benburwell.planes.gui.GraphicsTheme;
+import com.benburwell.planes.gui.aircraftmap.symbols.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,9 +34,13 @@ public class AircraftMap extends JPanel {
 
     // instance fields
     private List<Drawable> planes = new ArrayList<>();
+    private List<Drawable> navaids = new ArrayList<>();
+    private List<Drawable> airports = new ArrayList<>();
     private double centerLatitude;
     private double centerLongitude;
     private int pixelsPerNauticalMile = 10;
+    private boolean showNavAids = true;
+    private boolean showAirports = true;
 
     /**
      * Construct a map
@@ -44,6 +52,45 @@ public class AircraftMap extends JPanel {
         this.setCenter(0, 0);
     }
 
+    public void addNavAids(List<NavigationAid> aids) {
+        for (NavigationAid aid : aids) {
+            if (aid.getType().equals("VOR")) {
+                Position pos = new Position();
+                pos.setLatitude(aid.getLatitude());
+                pos.setLongitude(aid.getLongitude());
+                pos.setAltitude(aid.getElevation());
+                this.navaids.add(new VORSymbol(aid.getIdent(), pos, aid.getFrequency()));
+            }
+            if (aid.getType().equals("VOR-DME")) {
+                Position pos = new Position();
+                pos.setLatitude(aid.getLatitude());
+                pos.setLongitude(aid.getLongitude());
+                pos.setAltitude(aid.getElevation());
+                this.navaids.add(new VORDMESymbol(aid.getIdent(), pos, aid.getFrequency()));
+            }
+            if (aid.getType().equals("VORTAC")) {
+                Position pos = new Position();
+                pos.setLatitude(aid.getLatitude());
+                pos.setLongitude(aid.getLongitude());
+                pos.setAltitude(aid.getElevation());
+                this.navaids.add(new VORTACSymbol(aid.getIdent(), pos, aid.getFrequency()));
+            }
+            if (aid.getType().equals("NDB")) {
+                Position pos = new Position();
+                pos.setLatitude(aid.getLatitude());
+                pos.setLongitude(aid.getLongitude());
+                pos.setAltitude(aid.getElevation());
+                this.navaids.add(new NDBSymbol(aid.getIdent(), pos, aid.getFrequency()));
+            }
+        }
+    }
+
+    public void addAirports(List<Airport> airports) {
+        for (Airport airport : airports) {
+            this.airports.add(new AirportSymbol(airport));
+        }
+    }
+
     /**
      * Paint the ViewComponent on a Graphics instance
      *
@@ -52,9 +99,28 @@ public class AircraftMap extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        this.drawPositionAndScale(g);
-        this.drawRange(g);
-        this.planes.forEach(item -> item.drawOn(g, this));
+        Graphics2D g2d = (Graphics2D)g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        this.drawPositionAndScale(g2d);
+        this.drawRange(g2d);
+        if (this.showNavAids) {
+            this.navaids.forEach(aid -> aid.drawOn(g2d, this));
+        }
+        if (this.showAirports) {
+            this.airports.forEach(airport -> airport.drawOn(g2d, this));
+        }
+        this.planes.forEach(item -> item.drawOn(g2d, this));
+        g2d.dispose();
+    }
+
+    public void toggleNavAids() {
+        this.showNavAids = !this.showNavAids;
+        this.redraw();
+    }
+
+    public void toggleAirports() {
+        this.showAirports = !this.showAirports;
+        this.redraw();
     }
 
     public void drawPositionAndScale(Graphics g) {
