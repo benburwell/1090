@@ -3,12 +3,9 @@ package com.benburwell.planes.gui.aircraftmap;
 import com.benburwell.planes.data.Airport;
 import com.benburwell.planes.data.NavigationAid;
 import com.benburwell.planes.data.Position;
+import com.benburwell.planes.graph.RouteGraph;
 import com.benburwell.planes.gui.GraphicsTheme;
-import com.benburwell.planes.gui.aircraftmap.symbols.AirportSymbol;
-import com.benburwell.planes.gui.aircraftmap.symbols.NDBSymbol;
-import com.benburwell.planes.gui.aircraftmap.symbols.VORDMESymbol;
-import com.benburwell.planes.gui.aircraftmap.symbols.VORSymbol;
-import com.benburwell.planes.gui.aircraftmap.symbols.VORTACSymbol;
+import com.benburwell.planes.gui.aircraftmap.symbols.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -53,18 +50,20 @@ public class AircraftMap extends JPanel {
     private List<Drawable> planes = new ArrayList<>();
     private List<Drawable> navaids = new ArrayList<>();
     private List<Drawable> airports = new ArrayList<>();
+    private List<Drawable> routes = new ArrayList<>();
     private double centerLatitude;
     private double centerLongitude;
     private int pixelsPerNauticalMile = 10;
     private boolean showNavAids = true;
     private boolean showAirports = true;
+    private boolean showRoutes = true;
 
     /**
      * Construct a map
      */
     public AircraftMap() {
         super();
-        this.setBackground(GraphicsTheme.Colors.BASE_1);
+        this.setBackground(GraphicsTheme.Styles.MAP_BACKGROUND_COLOR);
         this.setBorder(BorderFactory.createEmptyBorder());
         this.setCenter(0, 0);
     }
@@ -110,6 +109,10 @@ public class AircraftMap extends JPanel {
         });
     }
 
+    public void addRoutes(RouteGraph routes) {
+        routes.getAirways().forEach(airway -> this.routes.add(new RouteSymbol(airway)));
+    }
+
     /**
      * Paint the Tabbable on a Graphics instance
      *
@@ -120,15 +123,29 @@ public class AircraftMap extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Base layer -- Routes
+        if (this.showRoutes) {
+            this.routes.forEach(route -> route.drawOn(g2d, this));
+        }
+
+        // Compass rose
         this.drawPositionAndScale(g2d);
         this.drawRange(g2d);
+
+        // Aids to Navigation
         if (this.showNavAids) {
             this.navaids.forEach(aid -> aid.drawOn(g2d, this));
         }
+
+        // Airports
         if (this.showAirports) {
             this.airports.forEach(airport -> airport.drawOn(g2d, this));
         }
+
+        // Planes
         this.planes.forEach(item -> item.drawOn(g2d, this));
+
         g2d.dispose();
     }
 
@@ -142,11 +159,16 @@ public class AircraftMap extends JPanel {
         this.redraw();
     }
 
+    public void toggleRoutes() {
+        this.showRoutes = !this.showRoutes;
+        this.redraw();
+    }
+
     private void drawPositionAndScale(Graphics g) {
         Font currentFont = g.getFont();
         Font newFont = currentFont.deriveFont(FONT_SIZE);
         g.setFont(newFont);
-        g.setColor(GraphicsTheme.Colors.BLUE);
+        g.setColor(GraphicsTheme.Styles.MAP_LABEL_COLOR);
         g.drawString(String.format("%08.5f N", this.centerLatitude), TEXT_PADDING, (int) FONT_SIZE + TEXT_PADDING);
         g.drawString(String.format("%08.5f E", this.centerLongitude), TEXT_PADDING, (int) FONT_SIZE * 2 + TEXT_PADDING);
         g.drawString(String.format("%d nm", this.getRangeRadius()), TEXT_PADDING, (int) FONT_SIZE * 3 + TEXT_PADDING);
@@ -172,7 +194,7 @@ public class AircraftMap extends JPanel {
     private void drawRange(Graphics g) {
         int centerX = this.getWidth() / 2;
         int centerY = this.getHeight() / 2;
-        g.setColor(GraphicsTheme.Colors.BASE_3);
+        g.setColor(GraphicsTheme.Styles.MAP_RANGE_COLOR);
         for (Integer radius : this.getRangeRadii()) {
             int pixelRadius = (int) (this.getPixelsPerNauticalMile() * radius);
             g.drawOval(centerX - pixelRadius, centerY - pixelRadius, pixelRadius * 2, pixelRadius * 2);
@@ -256,4 +278,5 @@ public class AircraftMap extends JPanel {
         this.centerLatitude = Math.max(this.centerLatitude - degreesToMove, MIN_LATITUDE);
         this.redraw();
     }
+
 }

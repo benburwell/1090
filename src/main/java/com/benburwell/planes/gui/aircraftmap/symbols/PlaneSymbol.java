@@ -50,8 +50,8 @@ public class PlaneSymbol extends GeoPoint implements Drawable {
     }
 
     public Color getPlaneColor() {
-        Color minColor = GraphicsTheme.Colors.RED;
-        Color maxColor = GraphicsTheme.Colors.GREEN;
+        Color minColor = GraphicsTheme.Styles.MAP_PLANE_MIN_COLOR;
+        Color maxColor = GraphicsTheme.Styles.MAP_PLANE_MAX_COLOR;
 
         float[] minHsb = Color.RGBtoHSB(minColor.getRed(), minColor.getGreen(), minColor.getBlue(), null);
         float[] maxHsb = Color.RGBtoHSB(maxColor.getRed(), maxColor.getGreen(), maxColor.getBlue(), null);
@@ -123,14 +123,14 @@ public class PlaneSymbol extends GeoPoint implements Drawable {
             g2d.dispose();
 
             // draw the history track
-            g.setColor(GraphicsTheme.Colors.BASE_4);
+            g.setColor(GraphicsTheme.Styles.MAP_PLANE_TRACK_COLOR);
             this.historyTrack.forEach(pos -> {
                 GeoPoint p = new GeoPoint(pos);
                 g.fillRect(p.getX(map) - 2, p.getY(map) - 2, 4, 4);
             });
 
             // draw the name of the plane
-            g.setColor(GraphicsTheme.Colors.BASE_5);
+            g.setColor(GraphicsTheme.Styles.MAP_LABEL_COLOR);
             g.drawString(this.getDisplayName(), x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y);
             String infoString = String.format("%d%s %.1f", this.getFlightLevel(), this.getVerticalRateIndicator(), this.getSpeed());
             g.drawString(infoString,  x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y + g.getFontMetrics().getHeight());

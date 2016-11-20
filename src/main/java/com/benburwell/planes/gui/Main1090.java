@@ -4,10 +4,8 @@
 
 package com.benburwell.planes.gui;
 
-import com.benburwell.planes.data.AircraftStore;
-import com.benburwell.planes.data.Airport;
-import com.benburwell.planes.data.CSVObjectStore;
-import com.benburwell.planes.data.NavigationAid;
+import com.benburwell.planes.data.*;
+import com.benburwell.planes.graph.RouteGraph;
 import com.benburwell.planes.gui.aircraftmap.AircraftMapComponent;
 import com.benburwell.planes.gui.aircrafttable.AircraftTableComponent;
 import com.benburwell.planes.gui.airportstable.AirportsComponent;
@@ -31,6 +29,7 @@ public class Main1090 extends JFrame {
     private AircraftStore aircraft = new AircraftStore();
     private CSVObjectStore<NavigationAid> navaids = new CSVObjectStore<>();
     private CSVObjectStore<Airport> airports = new CSVObjectStore<>();
+    private RouteGraph routeGraph = new RouteGraph();
     private int currentTcpConnection = 0;
     private JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -60,12 +59,20 @@ public class Main1090 extends JFrame {
             System.out.println("Could not read airport file: " + e.getMessage());
         }
 
+        try {
+            CSVObjectStore<Intersection> intersections = new CSVObjectStore<>();
+            intersections.readFromResource("/airways_db.csv", Intersection.class);
+            intersections.getObjects().forEach(intersection -> this.routeGraph.addIntersection(intersection));
+        } catch (IOException | InstantiationException | IllegalAccessException e) {
+            System.out.println("Could not read route intersection file: " + e.getMessage());
+        }
+
         this.createTabs();
     }
 
     private void createTabs() {
         List<Tabbable> tabs = new ArrayList<>();
-        tabs.add(new AircraftMapComponent(this.aircraft, this.navaids, this.airports));
+        tabs.add(new AircraftMapComponent(this.aircraft, this.navaids, this.airports, this.routeGraph));
         tabs.add(new AircraftTableComponent(this.aircraft));
         tabs.add(new NavigationAidComponent(this.navaids));
         tabs.add(new AirportsComponent(this.airports));

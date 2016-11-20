@@ -21,7 +21,7 @@ public class VORTACSymbol extends VORSymbol implements Drawable {
         if (this.shouldDrawOn(map)) {
             int x = this.getX(map);
             int y = this.getY(map);
-            graphicsContext.setColor(GraphicsTheme.Colors.VIOLET);
+            graphicsContext.setColor(GraphicsTheme.Styles.MAP_NAVAID_COLOR);
 
             int[] xs = { x - VORSymbol.X_OFFSET, x + VORSymbol.X_OFFSET, x + VORSymbol.X_OFFSET, x - VORSymbol.X_OFFSET, x - VORSymbol.X_OFFSET };
             int[] ys = { y + VORSymbol.RADIUS, y + VORSymbol.RADIUS, y + VORSymbol.RADIUS * 2, y + VORSymbol.RADIUS * 2, y + VORSymbol.RADIUS };

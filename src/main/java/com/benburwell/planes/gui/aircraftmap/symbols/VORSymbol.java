@@ -32,7 +32,7 @@ public class VORSymbol extends GeoPoint implements Drawable {
         if (this.shouldDrawOn(map)) {
             int x = this.getX(map);
             int y = this.getY(map);
-            graphicsContext.setColor(GraphicsTheme.Colors.VIOLET);
+            graphicsContext.setColor(GraphicsTheme.Styles.MAP_NAVAID_COLOR);
 
             // center dot
             graphicsContext.fillOval(x - DOT_RADIUS, y - DOT_RADIUS, DOT_RADIUS * 2, DOT_RADIUS * 2);

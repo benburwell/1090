@@ -1,10 +1,7 @@
 package com.benburwell.planes.gui.aircraftmap;
 
-import com.benburwell.planes.data.AircraftStore;
-import com.benburwell.planes.data.AircraftStoreListener;
-import com.benburwell.planes.data.Airport;
-import com.benburwell.planes.data.CSVObjectStore;
-import com.benburwell.planes.data.NavigationAid;
+import com.benburwell.planes.data.*;
+import com.benburwell.planes.graph.RouteGraph;
 import com.benburwell.planes.gui.Tabbable;
 import com.benburwell.planes.gui.aircraftmap.symbols.PlaneSymbol;
 
@@ -27,7 +24,7 @@ public class AircraftMapComponent implements Tabbable {
     private AircraftMap mapPanel;
     private AircraftStoreListener aircraftStoreListener;
 
-    public AircraftMapComponent(AircraftStore store, CSVObjectStore<NavigationAid> navaids, CSVObjectStore<Airport> airportStore) {
+    public AircraftMapComponent(AircraftStore store, CSVObjectStore<NavigationAid> navaids, CSVObjectStore<Airport> airportStore, RouteGraph routeGraph) {
         this.store = store;
 
         this.setupMap();
@@ -37,6 +34,7 @@ public class AircraftMapComponent implements Tabbable {
         this.store.subscribe(this.aircraftStoreListener);
         this.mapPanel.addNavAids(navaids.getObjects());
         this.mapPanel.addAirports(airportStore.getObjects());
+        this.mapPanel.addRoutes(routeGraph);
 
         final Timer t = new Timer(MAX_REFRESH_MILLIS, e -> {
             AircraftMapComponent.this.aircraftStoreListener.aircraftStoreChanged();
@@ -69,6 +67,8 @@ public class AircraftMapComponent implements Tabbable {
                 this.mapPanel.toggleNavAids();
             } else if (e.getKeyCode() == KeyEvent.VK_A && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.toggleAirports();
+            } else if (e.getKeyCode() == KeyEvent.VK_R && e.getID() == KeyEvent.KEY_PRESSED) {
+                this.mapPanel.toggleRoutes();
             }
             return false;
         });

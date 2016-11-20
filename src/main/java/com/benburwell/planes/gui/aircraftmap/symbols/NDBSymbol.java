@@ -28,7 +28,7 @@ public class NDBSymbol extends GeoPoint implements Drawable {
     @Override
     public void drawOn(Graphics g, AircraftMap map) {
         if (this.shouldDrawOn(map)) {
-            g.setColor(GraphicsTheme.Colors.VIOLET);
+            g.setColor(GraphicsTheme.Styles.MAP_NAVAID_COLOR);
 
             int x = this.getX(map);
             int y = this.getY(map);

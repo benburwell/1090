@@ -21,7 +21,7 @@ public class VORDMESymbol extends VORSymbol implements Drawable {
         if (this.shouldDrawOn(map)) {
             int x = this.getX(map);
             int y = this.getY(map);
-            graphicsContext.setColor(GraphicsTheme.Colors.VIOLET);
+            graphicsContext.setColor(GraphicsTheme.Styles.MAP_NAVAID_COLOR);
             graphicsContext.drawRect(x - VORSymbol.RADIUS, y - VORSymbol.HEIGHT, VORSymbol.RADIUS * 2, VORSymbol.HEIGHT * 2);
         }
     }

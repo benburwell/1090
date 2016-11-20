@@ -24,4 +24,16 @@ public class GraphicsTheme {
         public static final Color CYAN = new Color(51, 133, 158);
         public static final Color GREEN = new Color(42, 168, 137);
     }
+
+    public static class Styles {
+        public static final Color MAP_BACKGROUND_COLOR = Colors.BASE_0;
+        public static final Color MAP_RANGE_COLOR = Colors.BASE_3;
+        public static final Color MAP_NAVAID_COLOR = Colors.VIOLET;
+        public static final Color MAP_AIRPORT_COLOR = Colors.MAGENTA;
+        public static final Color MAP_ROUTE_COLOR = Colors.BASE_2;
+        public static final Color MAP_LABEL_COLOR = Colors.BLUE;
+        public static final Color MAP_PLANE_MIN_COLOR = Colors.RED;
+        public static final Color MAP_PLANE_MAX_COLOR = Colors.GREEN;
+        public static final Color MAP_PLANE_TRACK_COLOR = Colors.BASE_4;
+    }
 }

@@ -39,7 +39,7 @@ public class AirportSymbol extends GeoPoint implements Drawable {
             int x = this.getX(map);
             int y = this.getY(map);
 
-            g.setColor(GraphicsTheme.Colors.MAGENTA);
+            g.setColor(GraphicsTheme.Styles.MAP_AIRPORT_COLOR);
 
             g.drawRect(x - 2, y - 2, 4, 4);
             g.drawString(this.getDisplayName(), x + 6, y);
