@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
  */
 public class MenuBarProvider {
     private JMenuBar menubar = new JMenuBar();
-    private JMenu file = new JMenu("1090");
+    private JMenu file = new JMenu("File");
     private JMenuItem fileQuitMenuItem = new JMenuItem("Quit");
     private JMenu data = new JMenu("Data Source");
     private JMenuItem dataConnectItem = new JMenuItem("Connect to Remote...");
