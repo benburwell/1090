@@ -5,7 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 /**
  * Created by ben on 11/19/16.
  */
-public class Airport {
+public class Airport extends AbstractCSVReader {
     private int id;
     private String ident;
     private String type;
@@ -25,7 +25,7 @@ public class Airport {
     private String wikipediaLink;
     private String keywords;
 
-    public Airport(CSVRecord record) {
+    public void readRecord(CSVRecord record) {
         this.setId(Integer.valueOf(record.get("id")));
         this.setIdent(record.get("ident"));
         this.setType(record.get("type"));

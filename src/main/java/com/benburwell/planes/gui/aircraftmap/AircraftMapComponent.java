@@ -15,12 +15,12 @@ import java.util.ArrayList;
  */
 public class AircraftMapComponent implements ViewComponent {
     private AircraftStore store;
-    private NavigationAidStore navaids;
-    private AirportStore airportStore;
+    private CSVObjectStore<NavigationAid> navaids;
+    private CSVObjectStore<Airport> airportStore;
     private AircraftMap mapPanel;
     private String focusedAircraftIdentifier = null;
 
-    public AircraftMapComponent(AircraftStore store, NavigationAidStore navaids, AirportStore airportStore) {
+    public AircraftMapComponent(AircraftStore store, CSVObjectStore<NavigationAid> navaids, CSVObjectStore<Airport> airportStore) {
         this.store = store;
         this.navaids = navaids;
         this.airportStore = airportStore;
@@ -28,8 +28,8 @@ public class AircraftMapComponent implements ViewComponent {
         this.setupMap();
         this.bindKeys();
         this.subscribeToChanges();
-        this.mapPanel.addNavAids(this.navaids.getNavigationAids());
-        this.mapPanel.addAirports(this.airportStore.getAirports());
+        this.mapPanel.addNavAids(this.navaids.getObjects());
+        this.mapPanel.addAirports(this.airportStore.getObjects());
     }
 
     public void focusNextAircraft() {

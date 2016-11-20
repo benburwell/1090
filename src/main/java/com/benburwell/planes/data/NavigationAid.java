@@ -7,7 +7,7 @@ import org.apache.commons.csv.CSVRecord;
  *
  * Created by ben on 11/19/16.
  */
-public class NavigationAid {
+public class NavigationAid extends AbstractCSVReader {
     private int id;
     private String filename;
     private String ident;
@@ -29,7 +29,7 @@ public class NavigationAid {
     private String power;
     private String associatedAirport;
 
-    public NavigationAid(CSVRecord record) {
+    public void readRecord(CSVRecord record) {
         this.setId(Integer.valueOf(record.get("id")));
         this.setFilename(record.get("filename"));
         this.setIdent(record.get("ident"));
