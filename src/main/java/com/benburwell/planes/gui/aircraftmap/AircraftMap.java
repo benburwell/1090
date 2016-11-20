@@ -8,7 +8,7 @@ import com.benburwell.planes.gui.aircraftmap.symbols.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -31,6 +31,12 @@ public class AircraftMap extends JPanel {
     public final int MIN_ZOOM_PIXELS_PER_MILE = 1;
     public final int MAX_ZOOM_PIXELS_PER_MILE = 2000;
     public final double PAN_INTERVAL_MILES = 1.0;
+
+    // airports
+    public final Set<String> VALID_AIRPORT_TYPES = new HashSet<>(Arrays.asList(new String[]{
+        "large_airport",
+        "medium_airport"
+    }));
 
     // instance fields
     private List<Drawable> planes = new ArrayList<>();
@@ -86,9 +92,11 @@ public class AircraftMap extends JPanel {
     }
 
     public void addAirports(List<Airport> airports) {
-        for (Airport airport : airports) {
+        airports.stream().filter(airport -> {
+            return VALID_AIRPORT_TYPES.contains(airport.getType());
+        }).forEach(airport -> {
             this.airports.add(new AirportSymbol(airport));
-        }
+        });
     }
 
     /**
