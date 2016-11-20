@@ -3,6 +3,7 @@ package com.benburwell.planes.gui.aircraftmap;
 import com.benburwell.planes.data.Airport;
 import com.benburwell.planes.data.NavigationAid;
 import com.benburwell.planes.data.Position;
+import com.benburwell.planes.data.Runway;
 import com.benburwell.planes.graph.RouteGraph;
 import com.benburwell.planes.gui.GraphicsTheme;
 import com.benburwell.planes.gui.aircraftmap.symbols.*;
@@ -51,6 +52,7 @@ public class AircraftMap extends JPanel {
     private List<Drawable> navaids = new ArrayList<>();
     private List<Drawable> airports = new ArrayList<>();
     private List<Drawable> routes = new ArrayList<>();
+    private List<Drawable> runways = new ArrayList<>();
     private double centerLatitude;
     private double centerLongitude;
     private int pixelsPerNauticalMile = 10;
@@ -58,6 +60,7 @@ public class AircraftMap extends JPanel {
     private DisplayMode navaidDisplayMode = DisplayMode.HIDDEN;
     private DisplayMode airportDisplayMode = DisplayMode.HIDDEN;
     private DisplayMode routeDisplayMode = DisplayMode.HIDDEN;
+    private DisplayMode runwayDisplayMode = DisplayMode.HIDDEN;
 
     /**
      * Construct a map
@@ -114,6 +117,10 @@ public class AircraftMap extends JPanel {
         routes.getAirways().forEach(airway -> this.routes.add(new RouteSymbol(airway)));
     }
 
+    public void addRunways(List<Runway> runways) {
+        runways.forEach(runway -> this.runways.add(new RunwaySymbol(runway)));
+    }
+
     /**
      * Paint the Tabbable on a Graphics instance
      *
@@ -131,6 +138,8 @@ public class AircraftMap extends JPanel {
         // Compass rose
         this.drawPositionAndScale(g2d);
         this.drawRange(g2d);
+
+        this.runways.forEach(runway -> runway.drawOn(g2d, this, this.runwayDisplayMode));
 
         // Aids to Navigation
         this.navaids.forEach(aid -> aid.drawOn(g2d, this, this.navaidDisplayMode));
@@ -156,6 +165,11 @@ public class AircraftMap extends JPanel {
 
     public void toggleRoutes() {
         this.routeDisplayMode = this.routeDisplayMode.next();
+        this.redraw();
+    }
+
+    public void toggleRunways() {
+        this.runwayDisplayMode = this.runwayDisplayMode.next();
         this.redraw();
     }
 

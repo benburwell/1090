@@ -31,9 +31,10 @@ public class GraphicsTheme {
         public static final Color MAP_NAVAID_COLOR = Colors.VIOLET;
         public static final Color MAP_AIRPORT_COLOR = Colors.MAGENTA;
         public static final Color MAP_ROUTE_COLOR = Colors.BASE_2;
-        public static final Color MAP_LABEL_COLOR = Colors.BLUE;
+        public static final Color MAP_LABEL_COLOR = Colors.CYAN;
         public static final Color MAP_PLANE_MIN_COLOR = Colors.RED;
         public static final Color MAP_PLANE_MAX_COLOR = Colors.GREEN;
         public static final Color MAP_PLANE_TRACK_COLOR = Colors.BASE_4;
+        public static final Color MAP_RUNWAY_BORDER_COLOR = Colors.BLUE;
     }
 }

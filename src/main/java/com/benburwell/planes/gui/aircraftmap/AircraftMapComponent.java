@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 import java.awt.event.KeyEvent;
+import java.util.stream.Collectors;
 
 /**
  * @author ben
@@ -24,7 +25,7 @@ public class AircraftMapComponent implements Tabbable {
     private AircraftMap mapPanel;
     private AircraftStoreListener aircraftStoreListener;
 
-    public AircraftMapComponent(AircraftStore store, CSVObjectStore<NavigationAid> navaids, CSVObjectStore<Airport> airportStore, RouteGraph routeGraph) {
+    public AircraftMapComponent(AircraftStore store, CSVObjectStore<NavigationAid> navaids, CSVObjectStore<Airport> airportStore, RouteGraph routeGraph, CSVObjectStore<Runway> runwayStore) {
         this.store = store;
 
         this.setupMap();
@@ -35,6 +36,7 @@ public class AircraftMapComponent implements Tabbable {
         this.mapPanel.addNavAids(navaids.getObjects());
         this.mapPanel.addAirports(airportStore.getObjects());
         this.mapPanel.addRoutes(routeGraph);
+        this.mapPanel.addRunways(runwayStore.getObjects().stream().filter(Runway::isDrawable).collect(Collectors.toList()));
 
         final Timer t = new Timer(MAX_REFRESH_MILLIS, e -> {
             AircraftMapComponent.this.aircraftStoreListener.aircraftStoreChanged();
@@ -63,6 +65,7 @@ public class AircraftMapComponent implements Tabbable {
      *  n   toggle navaids
      *  v   toggle routes
      *  f   toggle airfields
+     *  r   toggle runways
      */
     private void bindKeys() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
@@ -86,6 +89,8 @@ public class AircraftMapComponent implements Tabbable {
                 this.mapPanel.toggleAirports();
             } else if (e.getKeyCode() == KeyEvent.VK_V && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.toggleRoutes();
+            } else if (e.getKeyCode() == KeyEvent.VK_R && e.getID() == KeyEvent.KEY_PRESSED) {
+                this.mapPanel.toggleRunways();
             }
             return false;
         });
