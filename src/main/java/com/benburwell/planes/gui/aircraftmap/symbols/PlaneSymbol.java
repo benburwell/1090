@@ -7,6 +7,9 @@ import com.benburwell.planes.gui.aircraftmap.AircraftMap;
 import com.benburwell.planes.gui.aircraftmap.Drawable;
 import com.benburwell.planes.gui.aircraftmap.GeoPoint;
 
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -20,25 +23,24 @@ public class PlaneSymbol extends GeoPoint implements Drawable {
     public final int TEXT_OFFSET_Y = 15;
     public final int MIN_COLOR_HEIGHT = 0;
     public final int MAX_COLOR_HEIGHT = 50000;
+    public final long HISTORY_MILLIS = 5 * 60 * 1000;
     private String name;
     private double heading;
     private double speed;
     private double verticalRate;
+    private List<Position> historyTrack = new ArrayList<>();
 
     public PlaneSymbol(Aircraft ac) {
-        this(ac.getCallsign(), ac.getCurrentPosition(), ac.getTrack(), ac.getGroundSpeed(), ac.getVerticalRate());
-    }
+        super(ac.getCurrentPosition());
+        this.name = ac.getCallsign();
+        this.heading = ac.getTrack();
+        this.speed = ac.getGroundSpeed();
+        this.verticalRate = ac.getVerticalRate();
 
-    public PlaneSymbol(String name, Position position, double heading, double speed, double verticalRate) {
-        this(name, position.getLatitude(), position.getLongitude(), position.getAltitude(), heading, speed, verticalRate);
-    }
-
-    public PlaneSymbol(String name, double latitude, double longitude, double altitude, double heading, double speed, double verticalRate) {
-        super(latitude, longitude, altitude);
-        this.name = name;
-        this.heading = heading;
-        this.speed = speed;
-        this.verticalRate = verticalRate;
+        Date minTime = new Date(System.currentTimeMillis() - HISTORY_MILLIS);
+        ac.getPositionHistory().stream()
+            .filter(pos -> pos.getTimestamp().after(minTime))
+            .forEach(pos -> historyTrack.add(pos));
     }
 
     public int getFlightLevel() {
@@ -118,6 +120,12 @@ public class PlaneSymbol extends GeoPoint implements Drawable {
             this.drawTriangle(g2d, x, y, predictedTrack);
             g2d.dispose();
 
+            // draw the history track
+            g.setColor(GraphicsTheme.Colors.BASE_4);
+            this.historyTrack.forEach(pos -> {
+                GeoPoint p = new GeoPoint(pos);
+                g.fillRect(p.getX(map) - 2, p.getY(map) - 2, 4, 4);
+            });
 
             // draw the name of the plane
             g.setColor(GraphicsTheme.Colors.BASE_5);

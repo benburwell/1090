@@ -1,5 +1,7 @@
 package com.benburwell.planes.gui.aircraftmap;
 
+import com.benburwell.planes.data.Position;
+
 /**
  * Created by ben on 11/19/16.
  */
@@ -7,6 +9,12 @@ public class GeoPoint {
     private double latitude;
     private double longitude;
     private double altitude;
+
+    public GeoPoint(Position position) {
+        this.latitude = position.getLatitude();
+        this.longitude = position.getLongitude();
+        this.altitude = position.getAltitude();
+    }
 
     public GeoPoint(double latitude, double longitude, double altitude) {
         this.latitude = latitude;

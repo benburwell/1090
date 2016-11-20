@@ -4,21 +4,27 @@ import com.benburwell.planes.data.*;
 import com.benburwell.planes.gui.Tabbable;
 import com.benburwell.planes.gui.aircraftmap.symbols.PlaneSymbol;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.Timer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by ben on 11/18/16.
  */
 public class AircraftMapComponent implements Tabbable {
+    public final long PLANE_EXPIRY_MILLIS = 60 * 1000;
+    public final int MAX_REFRESH_MILLIS = 5 * 1000;
+
     private AircraftStore store;
     private CSVObjectStore<NavigationAid> navaids;
     private CSVObjectStore<Airport> airportStore;
     private AircraftMap mapPanel;
-    private String focusedAircraftIdentifier = null;
+    private AircraftStoreListener aircraftStoreListener;
 
     public AircraftMapComponent(AircraftStore store, CSVObjectStore<NavigationAid> navaids, CSVObjectStore<Airport> airportStore) {
         this.store = store;
@@ -27,26 +33,16 @@ public class AircraftMapComponent implements Tabbable {
 
         this.setupMap();
         this.bindKeys();
-        this.subscribeToChanges();
+        this.setupListener();
+
+        this.store.subscribe(this.aircraftStoreListener);
         this.mapPanel.addNavAids(this.navaids.getObjects());
         this.mapPanel.addAirports(this.airportStore.getObjects());
-    }
 
-    public void focusNextAircraft() {
-    //    List<String> aircraftIdentifiers = new ArrayList<>(this.store.getAircraft().keySet());
-    //    Collections.sort(aircraftIdentifiers);
-    //    if (this.focusedAircraftIdentifier == null && aircraftIdentifiers.size() > 0) {
-    //        this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
-    //    } else {
-    //        int idx = aircraftIdentifiers.indexOf(this.focusedAircraftIdentifier);
-    //        if (idx > 0 && idx < aircraftIdentifiers.size() - 1) {
-    //            this.focusedAircraftIdentifier = aircraftIdentifiers.get(idx++);
-    //        } else if (aircraftIdentifiers.size() > 0) {
-    //            this.focusedAircraftIdentifier = aircraftIdentifiers.get(0);
-    //        } else {
-    //            this.focusedAircraftIdentifier = null;
-    //        }
-    //    }
+        final Timer t = new Timer(MAX_REFRESH_MILLIS, e -> {
+            AircraftMapComponent.this.aircraftStoreListener.aircraftStoreChanged();
+        });
+        t.start();
     }
 
     private void setupMap() {
@@ -70,9 +66,6 @@ public class AircraftMapComponent implements Tabbable {
                 this.mapPanel.moveNorth();
             } else if (e.getKeyCode() == KeyEvent.VK_0 && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.setCenter(40.6188942, -75.4947205);
-            } else if (e.getKeyCode() == KeyEvent.VK_TAB && e.getID() == KeyEvent.KEY_PRESSED) {
-                this.focusNextAircraft();
-                this.centerMapOnPlane(this.focusedAircraftIdentifier);
             } else if (e.getKeyCode() == KeyEvent.VK_N && e.getID() == KeyEvent.KEY_PRESSED) {
                 this.mapPanel.toggleNavAids();
             } else if (e.getKeyCode() == KeyEvent.VK_A && e.getID() == KeyEvent.KEY_PRESSED) {
@@ -82,19 +75,17 @@ public class AircraftMapComponent implements Tabbable {
         });
     }
 
-    private void centerMapOnPlane(String identifier) {
-        if (identifier != null) {
-            Position pos = this.store.getAircraft().get(identifier).getCurrentPosition();
-            this.mapPanel.setCenter(pos.getLatitude(), pos.getLongitude());
-        }
-    }
-
-    private void subscribeToChanges() {
-        this.store.subscribe(new AircraftStoreListener() {
+    private void setupListener() {
+        this.aircraftStoreListener = new AircraftStoreListener() {
             @Override
             public void aircraftStoreChanged() {
+                Date minTime = new Date(System.currentTimeMillis() - PLANE_EXPIRY_MILLIS);
                 List<Drawable> planes = new ArrayList<>();
-                store.getAircraft().values().forEach(aircraft -> planes.add(new PlaneSymbol(aircraft)));
+                store.getAircraft().values().forEach(aircraft -> {
+                    if (aircraft.getCurrentPosition().getTimestamp().after(minTime)) {
+                        planes.add(new PlaneSymbol(aircraft));
+                    }
+                });
                 mapPanel.setPlanes(planes);
                 mapPanel.validate();
                 mapPanel.repaint();
@@ -104,7 +95,7 @@ public class AircraftMapComponent implements Tabbable {
             public boolean respondTo(String aircraftId) {
                 return true;
             }
-        });
+        };
     }
 
     @Override

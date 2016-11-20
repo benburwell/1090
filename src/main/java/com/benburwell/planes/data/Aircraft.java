@@ -2,6 +2,7 @@ package com.benburwell.planes.data;
 
 import com.benburwell.planes.sbs.SBSPacket;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -25,14 +26,24 @@ public class Aircraft implements Comparable<Aircraft> {
 
     public void handleUpdate(SBSPacket packet) {
         this.packetCount++;
+
+        Position newPosition = new Position();
+        newPosition.setAltitude(this.currentPosition.getAltitude());
+        newPosition.setLatitude(this.currentPosition.getLatitude());
+        newPosition.setLongitude(this.currentPosition.getLongitude());
+        newPosition.setTimestamp(this.currentPosition.getTimestamp());
+
         if (packet.getAltitude() != null) {
-            this.currentPosition.setAltitude(packet.getAltitude());
+            newPosition.setAltitude(packet.getAltitude());
+            newPosition.setTimestamp(new Date(System.currentTimeMillis()));
         }
         if (packet.getLatitude() != null) {
-            this.currentPosition.setLatitude(packet.getLatitude());
+            newPosition.setLatitude(packet.getLatitude());
+            newPosition.setTimestamp(new Date(System.currentTimeMillis()));
         }
         if (packet.getLongitude() != null) {
-            this.currentPosition.setLongitude(packet.getLongitude());
+            newPosition.setLongitude(packet.getLongitude());
+            newPosition.setTimestamp(new Date(System.currentTimeMillis()));
         }
         if (packet.getCallsign() != null && !packet.getCallsign().isEmpty()) {
             this.callsign = packet.getCallsign();
@@ -48,6 +59,11 @@ public class Aircraft implements Comparable<Aircraft> {
         }
         if (packet.getVerticalRate() != null) {
             this.verticalRate = packet.getVerticalRate();
+        }
+
+        if (newPosition.getTimestamp().after(this.currentPosition.getTimestamp())) {
+            this.positionHistory.add(currentPosition);
+            this.currentPosition = newPosition;
         }
     }
 
@@ -81,6 +97,10 @@ public class Aircraft implements Comparable<Aircraft> {
 
     public double getVerticalRate() {
         return this.verticalRate;
+    }
+
+    public List<Position> getPositionHistory() {
+        return positionHistory;
     }
 
     @Override
