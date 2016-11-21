@@ -117,19 +117,19 @@ public class PlaneSymbol extends GeoPoint implements Drawable {
             int x = this.getX(map);
             int y = this.getY(map);
 
-            // draw the plane dot
-            Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setColor(this.getPlaneColor());
-            int predictedTrack = this.getPredictionLength(map.getPixelsPerNauticalMile());
-            this.drawTriangle(g2d, x, y, predictedTrack);
-            g2d.dispose();
-
             // draw the history track
             g.setColor(GraphicsTheme.Styles.MAP_PLANE_TRACK_COLOR);
             this.historyTrack.forEach(pos -> {
                 GeoPoint p = new GeoPoint(pos);
                 g.fillRect(p.getX(map) - 2, p.getY(map) - 2, 4, 4);
             });
+
+            // draw the plane dot
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setColor(this.getPlaneColor());
+            int predictedTrack = this.getPredictionLength(map.getPixelsPerNauticalMile());
+            this.drawTriangle(g2d, x, y, predictedTrack);
+            g2d.dispose();
 
             // draw the name of the plane
             if (displayMode.equals(DisplayMode.DETAILED)) {
