@@ -44,7 +44,10 @@ public class AircraftMap extends JPanel {
     // airports
     public final Set<String> VALID_AIRPORT_TYPES = new HashSet<>(Arrays.asList(new String[]{
         "large_airport",
-        "medium_airport"
+        "medium_airport",
+        "small_airport",
+        "heliport",
+        "seaplane_base"
     }));
 
     // instance fields
@@ -57,10 +60,10 @@ public class AircraftMap extends JPanel {
     private double centerLongitude;
     private int pixelsPerNauticalMile = 10;
 
-    private DisplayMode navaidDisplayMode = DisplayMode.HIDDEN;
-    private DisplayMode airportDisplayMode = DisplayMode.HIDDEN;
-    private DisplayMode routeDisplayMode = DisplayMode.HIDDEN;
-    private DisplayMode runwayDisplayMode = DisplayMode.HIDDEN;
+    private DisplayMode navaidDisplayMode = DisplayMode.DETAILED;
+    private DisplayMode airportDisplayMode = DisplayMode.DETAILED;
+    private DisplayMode routeDisplayMode = DisplayMode.BASIC;
+    private DisplayMode runwayDisplayMode = DisplayMode.BASIC;
 
     /**
      * Construct a map
